@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/menu.css" />
+    <link rel="stylesheet" href="css/grafica.css" />
+    <script src="js/menu.js"></script>
+    <script type="module" src="js/grafica.js"></script>
+    <script src="js/algoritmos.js"></script>
+    <script src="js/esteticos.js"></script>
+    <title>Sistemas Operativos</title>
+  </head>
+  <body>
+    <div class="menu">
+      <div class="menu_titulo">
+        <h2>ALGORITMOS DE ORDENAMIENTO</h2>
+      </div>
+    </div>
+    <div class="contenedor" id="contenedor">
+      <div class="contenedor_menu" id="contenedor_menu">
+        <div><a>Todos</a></div>
+        <div><a>FIFO</a></div>
+        <div><a>Prioridades</a></div>
+        <div><a>SJF</a></div>
+        <div><a>R.R.</a></div>
+        <!-- Esta funcion requiere de los parametros de, si va a trabajar con TLL, Q o prioridad, el titulo de la tabla, y el Id para el boton para poder ejecutar ese algoritmo en especifico(linea 33, algoritmos.js)-->
+        <div id="clsSRTF" class="" onclick="resaltarSeleccion('clsSRTF'), creaTabla('TLL','SRTF (Short Remaining Time First)','SRTF')"><a>SRTF</a></div>
+      </div>
+      <!--
+        <div class="contenedor_contenido" id="contenedor_contenido">
+        <div class="contenido_seleccion_titulo">
+          <div>SRTF (Short Remaining Time First)</div>
+        </div>
+
+        <div class="contenido_principal">
+        <div class="contenido">
+          <div class="accion">
+            <div class="agrega">
+              <a onclick="agregar(0)">
+                <img
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABRUlEQVRIS7VUgQ2CMBCEDXQD3EAnECdQN9ANdAJ1At1AnECdQDfQDWQD3UDvCCX1gfIQaHJp0n7vvv/X+l7Hw++Y39MIhEhiCnAO0oRizE/gClxcSboEhji4AWYVt6TQHKBobpQJLBC5B3o1SrhG7EHGFwmsUvIa3FloTkQKsMaPmpnLREZpf5J1KXDDWuhI3cR/HTHsxcDs2wJs5rmiLhoBUiyBSN7giAU21zW0ArQunfVXItae1mxD4AOSvhR4YSEQ7JqHyCOyJ4UCbwRK3zcVyJK3CdosUQyFxEm2QOdNbtOmdFDyCcoaV5VJY1N+fhOAjc4J0EV0U9NBUmZ/NwRtf3Y7EG/t7MpsWPdHZeYkj0xpXDcwe3zVdFbV62bN+fdwzg3NQ1rg1BgIAfaI2RIxcALolqShTQXKzqrWNTdQEZUF/QCeMT0ZpW2J7wAAAABJRU5ErkJggg=="
+              /></a>
+              <h3>Agrega</h3>
+            </div>
+            <div class="quita">
+              <a onclick="eliminar(0)">
+                <img
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABPUlEQVRIS7VUgRGCMAyEDXQD3EAnECdQN8ANdAJ1At1AnECdQDfQDWQD3UD/OcrVQKFgyd1fsSb5NPnW9zo2v+P8ng1BiCKmANcgKyjB+gAuwLmqyCqCIQLXwKzmlCSaAyQtmIkggucO6DVo4Qq+e+lfRrDMkjfInbsWSCQBe3xvWLksZJTNJ92XBFfshW1K12I4i4H6rRNwmKc/k6vwBT5ieYIDNjhcF0bpUlk/LWLvKU0X9kaSviR4YiMQ2W0uIkM+Iq6U4AUnqfu2BHnxegKXLUrAkCpJJ+h8yC5lSgWlj6DssYs28fGbABx0gYAqopraGpOy+ptK4Pqx2yLxRq/OJMOmLyorZ/JYtabqBOo/3moqq+52s+d8e7gWzOYiRYgaAyHAGbFaIgGOANWSDrQtgSnWat/mBFaJTE5fd9U1GSnV1ZQAAAAASUVORK5CYII="
+              /></a>
+              <h3>Quitar</h3>
+            </div>
+          </div>
+          <div class="contenido_titulo"><h3>Datos</h3></div>
+          <div class="contenido_tabla" id="contenido_tabla_1">
+            <div class="contenido_tabla_titulo">
+              <div><h2>Proceso</h2></div>
+              <div><h2>RCPU</h2></div>
+              <div><h2>TLL</h2></div>
+            </div>
+            <div class="contenido_tabla_datos" id="contenido_tabla_datos">
+              <div><input id="1" /></div>
+              <div><input type="number" /></div>
+              <div><input type="number" /></div>
+            </div>
+          <div class="boton">
+            GENERAR
+          </div>
+          </div>
+        </div>
+        <div class="operaciones">
+          <div class="operaciones_titulo"> DATOS OPERACIONES</div>
+          <div class="operaciones_datos">
+            <div class="TR">
+              <div class="TR_titulos">
+                <div class="tr_proceso">Proceso</div>
+                <div class="tr_tr">TiempoRetorno</div>
+              </div>
+              <div class="TR_datos">
+                <div class="tr_proceso">PDF</div>
+                <div class="tr_tr">3</div>
+              </div>
+              <div class="TR_datos">
+                <div class="tr_proceso">PDF</div>
+                <div class="tr_tr">3</div>
+              </div> 
+              <div class="TR_datos">
+                <div class="tr_proceso">PDF</div>
+                <div class="tr_tr">3</div>
+              </div>
+            </div>
+            <div class="TE">
+              <div class="TE_titulos">
+                <div class="te_proceso">Proceso</div>
+                <div class="te_te">TiempoEspera</div>
+              </div>
+              <div class="TE_datos">
+                <div class="te_proceso">PDF</div>
+                <div class="te_te">3</div>
+              </div>
+              <div class="TE_datos">
+                <div class="te_proceso">PDF</div>
+                <div class="te_te">3</div>
+              </div>
+              <div class="TE_datos">
+                <div class="te_proceso">PDF</div>
+                <div class="te_te">3</div>
+              </div>
+            </div>
+            <div class="Tiempos_medios">
+              <div class="TME">
+                <div class="TME_titulo">TME</div>
+                <div class="TME_dato">16.8</div>
+              </div>
+              <div class="TMR">
+                <div class="TMR_titulo">TMR</div>
+                <div class="TMR_dato">16.8</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      <div class="contenedor_grafica">
+        <div class="espacio_grafica">
+          <div class="contenedor_elemento">
+            <div class="label">A</div>
+            <div class="barra"></div>
+          </div>
+          <div class="contenedor_elemento">
+            <div class="label">B</div>
+            <div class="barra"></div>
+          </div>
+          <div class="contenedor_elemento">
+            <div class="label">B</div>
+            <div class="barra"></div>
+          </div>
+          <div class="contenedor_elemento">
+            <div class="label">B</div>
+            <div class="barra"></div>
+          </div>
+          <div class="contenedor_elemento">
+            <div class="label">B</div>
+            <div class="barra"></div>
+          </div>
+          <div class="contenedor_elemento">
+            <div class="label">B</div>
+            <div class="barra"></div>
+          </div>
+        </div>
+        
+        <div class="numeros">
+          <div class="numeros_por_par">
+            <div class="numero_inicial">0</div>
+            <div class="numero_final">1</div>
+          </div>
+          <div class="numeros_por_par">
+            <div class="numero_final_final">2</div>
+          </div>
+          <div class="numeros_por_par">
+            <div class="numero_final_final">2</div>
+          </div>
+          <div class="numeros_por_par">
+            <div class="numero_final_final">2</div>
+          </div>
+          <div class="numeros_por_par">
+            <div class="numero_final_final">2</div>
+          </div>
+          <div class="numeros_por_par">
+            <div class="numero_final_final">2</div>
+          </div>
+        </div>
+      </div>
+    </div>
+-->
+  </body>
+</html>
+

@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;700;900&family=Roboto:ital,wght@0,100;0,300;0,500;1,400;1,900&display=swap");
+
+.contenedor_grafica {
+  width: 100%;
+  height: 280px;
+  margin-top: 60px;
+}
+.espacio_grafica {
+  margin: 0px 10px;
+  width: auto;
+  height: 220px;
+  display: flex;
+  border-left: 2px solid black;
+}
+.contenedor_elemento {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0 5px;
+}
+
+.label {
+  width: 100%;
+  height: 15%;
+  text-align: center;
+  font-size: larger;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+}
+.barra {
+  background-color: rgb(240, 54, 54);
+  width: 100%;
+  height: 85%;
+  border: 2px solid gray;
+}
+
+.numeros {
+  border-top: 2px solid black;
+  width: auto;
+  height: 10%;
+  align-content: space-around;
+  justify-content: space-between;
+  display: flex;
+  margin: 0px 5px;
+  margin-top: 5px;
+}
+.numeros_por_par {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  border-right: 2px solid grey;
+  padding-right: 5px;
+}
+.numero_inicial {
+  width: 50%;
+  text-align: left;
+  display: flex;
+}
+.numero_final {
+  width: 50%;
+  text-align: right;
+}
+.numero_final_final {
+  width: 100%;
+  text-align: right;
+}
