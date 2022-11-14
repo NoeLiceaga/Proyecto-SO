@@ -280,9 +280,9 @@ function generaGrafica(elementos) {
 
 function datosOperaciones(tabla_grafica) {
   let tme = 0;
-  let acumlador_tme = 0;
+  let acumulador_tme = 0;
   let tmr = 0;
-  let acumlador_tmr = 0;
+  let acumulador_tmr = 0;
   let operaciones = document.getElementById("operaciones");
 
   let operaciones_datos = document.createElement("div");
@@ -314,6 +314,7 @@ function datosOperaciones(tabla_grafica) {
     tr_tr.classList.add("tr_tr");
 
     let tr = tabla_grafica.filter((item) => item.process == proceso[i]);
+    acumulador_tmr = acumulador_tmr + parseFloat(tr[tr.length - 1].cuenta);
     tr_tr.innerHTML = tr[tr.length - 1].cuenta;
     TR_datos.appendChild(tr_proceso);
     TR_datos.appendChild(tr_tr);
@@ -345,34 +346,17 @@ function datosOperaciones(tabla_grafica) {
     te_te.classList.add("te_te");
 
     let te = tabla_grafica.filter((item) => item.process == proceso[i]);
-    acumlador_tmr = acumlador_tmr + parseFloat(te[0].espera - mix[i]);
+    acumulador_tme = acumulador_tme + parseFloat(te[0].espera - mix[i]);
+
     te_proceso.innerHTML = te[0].process;
     te_te.innerHTML = te[0].espera;
-    //if (bandera == false) {
-    //  for (let x = 0; x < te.length; x++) {
-    //    if (te[x].process == tabla_grafica[0].process) {
-    //      te_proceso.innerHTML = te[0].process;
-    //      te_te.innerHTML = tllInicial;
-    //      bandera = true;
-    //    } else {
-    //      te_proceso.innerHTML = proceso[i];
-    //      te_te.innerHTML = te[0].cuenta;
-    //    }
-    //  }
-    //} else {
-    //  for (let h = 0; h < tabla_grafica.length; h++) {
-    //    if (tabla_grafica[h].process == proceso[i]) {
-    //      te_proceso.innerHTML = proceso[i];
-    //      te_te.innerHTML = tabla_grafica[h - 1].cuenta;
-    //    }
-    //  }
-    //}
 
     TE_datos.appendChild(te_proceso);
     TE_datos.appendChild(te_te);
     TE.appendChild(TE_datos);
   }
-  tmr = parseFloat(acumlador_tmr / proceso.length);
+  tme = parseFloat(acumulador_tme / proceso.length);
+  tmr = parseFloat(acumulador_tmr / proceso.length);
   operaciones_datos.appendChild(TE);
   operaciones.appendChild(operaciones_datos);
 
@@ -388,7 +372,7 @@ function datosOperaciones(tabla_grafica) {
 
   let TME_d = document.createElement("div");
   TME_d.classList.add("TME_dato");
-  TME_d.innerHTML = "15.8 ut";
+  TME_d.innerHTML = parseFloat(tme).toFixed(2) + " ut";
 
   TME.appendChild(TME_d);
   TM.appendChild(TME);
@@ -402,7 +386,7 @@ function datosOperaciones(tabla_grafica) {
 
   let TMR_d = document.createElement("div");
   TMR_d.classList.add("TMR_dato");
-  TMR_d.innerHTML = tmr + " ut";
+  TMR_d.innerHTML = parseFloat(tmr).toFixed(2) + " ut";
 
   TMR.appendChild(TMR_d);
   TM.appendChild(TMR);
