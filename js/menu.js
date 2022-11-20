@@ -30,6 +30,32 @@ function agregar() {
   contenedor.appendChild(divDatos);
 }
 
+function agregarRR() {
+  //agregar otra columna a la tabla de datos
+  let contenedor = document.getElementById("contenido_tabla");
+  let divProceso = document.createElement("div");
+  let divRCPU = document.createElement("div");
+  let divDatos = document.createElement("div");
+  let x = contenedor.childNodes;
+  let i = x[1].firstChild.firstChild.id;
+  console.log(i);
+  i = parseInt(i) + 1;
+  let inputProceso = document.createElement("input");
+  let inputRCPU = document.createElement("input");
+  
+  inputProceso.id = i;
+  inputRCPU.type = "number";
+  
+  divProceso.appendChild(inputProceso);
+  divRCPU.appendChild(inputRCPU);
+  
+  divDatos.appendChild(divProceso);
+  divDatos.appendChild(divRCPU);
+  
+  divDatos.classList.add("contenido_tabla_datos");
+  contenedor.appendChild(divDatos);
+}
+
 function eliminar() {
   //elimina la ultima fila de la tabla datos
   let contenedor = document.getElementById("contenido_tabla");
@@ -142,6 +168,8 @@ function creaTabla(tipo, nombreTabla, tipoTabla) {
     input_2.type = "number";
     let div_ctd_3 = document.createElement("div");
     let input_3 = document.createElement("input");
+
+    
     input_3.type = "number";
 
     div_ctd_1.appendChild(input_1);
@@ -170,7 +198,14 @@ function creaTabla(tipo, nombreTabla, tipoTabla) {
     contenedor_contenido.appendChild(contenido_principal);
 
     padre.appendChild(contenedor_contenido);
-    a.onclick = agregar;
+    if(tipoTabla=="RR"){
+      a.onclick = agregarRR;
+      input_3.id="Quantum";
+    }
+    if(tipoTabla=="SRTF"){
+      a.onclick = agregar;
+    }
+    
     aq.onclick = eliminar;
   }
 }
