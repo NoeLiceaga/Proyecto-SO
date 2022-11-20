@@ -124,7 +124,13 @@ function creaTabla(tipo, nombreTabla, tipoTabla) {
     boton.classList.add("boton");
     boton.innerText = "GENERAR";
     boton.id = tipoTabla;
-    boton.onclick = obtenDatos;
+    if(tipoTabla=="RR"){
+      boton.onclick = obtenDatosRR;
+    }
+    if(tipoTabla=="SRTF"){
+      boton.onclick = obtenDatos;
+    }
+    
 
     contenido.appendChild(accion);
 

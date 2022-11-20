@@ -4,6 +4,7 @@ let mix = []; //Arreglo con (tll, Quantums, Prioridad, etc), depende del tipo de
 let repetidos = 0; ////Cuantos tiempos de llegada se repiten, ejem. 2 y 4
 let arrayTllRepetidos = []; //Arreglo con la cantidad de cada tiempo de llamada reptidos ejem. 3 en tiempo 2 y 2 en tiempo 4
 let tllInicial = 0; //Sirve para saber en que tll entró el primer proceso
+let quant=0; // Variable global del quantum en RR
 
 function obtenDatos() {
   let padre = document.getElementById("contenido_tabla");
@@ -35,6 +36,51 @@ function obtenDatos() {
     proceosSRTF();
   }
 }
+
+
+function obtenDatosRR() {
+  
+  let padre = document.getElementById("contenido_tabla");
+  let divConDatos = padre.childNodes;
+  for (let i = 1; i < divConDatos.length; i++) {
+    let datosDelDivPadre = divConDatos[i].childNodes; //Jalo todos los divs que tienen inputs
+    for (let j = 0; j < datosDelDivPadre.length; j++) {
+      //cada div tiene 3 inputs, los cuales guardan nombre, rcpu y (tll,Q etc)
+      let dato = datosDelDivPadre[j].firstChild;
+      if (dato.value == "") {
+        console.log("Campos vacios");
+        break;
+      }
+      //Voy guardando en arreglos los valores de cada input
+      if (j == 0) {
+        proceso.push(dato.value);
+      } else {
+        if (j == 1) {
+          rcpu.push(parseInt(dato.value));
+        } else {
+          if(i == 1){
+            quant = dato.value;
+          }
+          
+        }
+      }
+    }
+  }
+  
+
+  //Si mi boton contiene el id de SRTF, realiza ese algoritmo
+  let btn = document.getElementById("RR");
+  if (btn.id != null) {
+    /*console.log (quant);
+    for(let k=0; k<proceso.length; k++){
+      console.log(proceso[k] + "\n");
+      console.log(rcpu[k] + "\n");
+    }*/
+    procesoRR();
+  }
+}
+
+
 /////////////////////////////////////////////INICIO FUNCIONES ALGORITMO SRTF/////////////////////////////////////////////////////////////
 
 function proceosSRTF() {
@@ -224,6 +270,60 @@ function verificaTiempoLlegadasRepetidos(datos_tabla) {
 }
 
 /////////////////////////////////////////////FIN FUNCIONES ALGORITMO SRTF/////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////INICIO ROUND ROBIN /////////////////////////////////////////////////////////////////
+
+function procesoRR(){
+
+  let buffer_proceso = [];
+  let intervalosGrafica = [];
+  intervalosGrafica[0] = 0;
+  let rcpuM = rcpu[0];
+  let procesoN=0;
+  let cont=0;
+  let tamInter = 0;
+  for(let i=0; i<proceso.length; i++){
+    buffer_proceso[i]= rcpu[i];
+    if(rcpu[i]>rcpuM){
+      rcpuM = rcpu[i];
+      procesoN=i;
+    }
+    if(rcpuM==rcpu[0]){
+      procesoN =0; 
+    }
+    console.log(buffer_proceso[i]);
+    console.log(procesoN);
+  }
+   while(buffer_proceso[procesoN]>0){
+    for(let k=0; k<proceso.length; k++){
+      if(buffer_proceso[k] > 0){
+        if(buffer_proceso[k] > quant){
+          buffer_proceso[k] = buffer_proceso[k] - quant;
+          if(cont==0){
+            intervalosGrafica[k+1]= intervalosGrafica[k+1] + quant;
+          }else{
+            tamInter = intervalosGrafica.length;
+            intervalosGrafica[tamInter + 1] = intervalosGrafica [tamInter+1] + quant;
+          }
+        }else{
+          tamInter = intervalosGrafica.length;
+          intervalosGrafica[tamInter + 1] = intervalosGrafica [tamInter + 1] + buffer_proceso[k];
+          buffer_proceso[k] = 0;
+        }
+      }
+    }
+    cont++;
+   }
+   
+   for(let s = 0; s<intervalosGrafica.length; s++){
+    console.log (intervalosGrafica[s] + " ");
+   }
+
+}
+
+
+/////////////////////////////////////////////FIN ROUND ROBIN////////////////////////////////////////////////////////////////////////
+
 
 //Genera la tabla de procesos,necesita un arreglo de objetos con los identificadores process y cuenta, revisar linea 81 o la funcion proceosSRTF
 function generaGrafica(elementos) {
