@@ -370,6 +370,8 @@ function procesoRR(){
   let procesoN=0;
   let cont=0;
   let tamInter = 0;
+  let datos_grafica=[];
+  let nombresGrafica = [];
   for(let i=0; i<proceso.length; i++){
     buffer_proceso[i]= rcpu[i];
     if(rcpu[i]>rcpuM){
@@ -392,15 +394,18 @@ function procesoRR(){
           //buffer_proceso[k] = parseInt(buffer_proceso[k]) - parseInt(quant); 
           if(cont==0){
             intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[k]) + parseInt(quant));
+            nombresGrafica.splice(k,0,proceso[k]);
             //intervalosGrafica[parseInt(k+1)]= parseInt(intervalosGrafica[k]) + parseInt(quant);
           }else{
             tamInter = parseInt(intervalosGrafica.length) - 1;
             intervalosGrafica.splice(parseInt(tamInter+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(quant));
+            nombresGrafica.splice(parseInt(tamInter+1),0,proceso[k]);
             //intervalosGrafica[parseInt(tamInter + 1)] = parseInt(intervalosGrafica [tamInter]) + parseInt(quant);
           }
         }else{
           tamInter = parseInt(intervalosGrafica.length) - 1;
           intervalosGrafica.splice(parseInt(tamInter+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(buffer_proceso[k]));
+          nombresGrafica.splice(parseInt(tamInter+1),0,proceso[k]);
           //intervalosGrafica[parseInt(tamInter + 1)] = parseInt(intervalosGrafica [tamInter]) + parseInt(buffer_proceso[k]);
           buffer_proceso.splice(k,1,'0');
         }
@@ -411,7 +416,19 @@ function procesoRR(){
    
    for(let s=0; s<intervalosGrafica.length; s++){
     console.log(intervalosGrafica[s]);
+    console.log(nombresGrafica[s]);
    }
+   
+   for(let m = 0; m<intervalosGrafica.length-1; m++){
+    datos_grafica.push(
+      (dicc = {
+        process: nombresGrafica[m],
+        cuenta: intervalosGrafica[m+1],
+      })
+    );
+   }
+   generaGrafica(datos_grafica);
+   
 }
 
 /////////////////////////////////////////////FIN ROUND ROBIN////////////////////////////////////////////////////////////////////////
