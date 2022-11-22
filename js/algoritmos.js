@@ -395,12 +395,12 @@ function procesoRR(){
             //intervalosGrafica[parseInt(k+1)]= parseInt(intervalosGrafica[k]) + parseInt(quant);
           }else{
             tamInter = parseInt(intervalosGrafica.length) - 1;
-            intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(quant));
+            intervalosGrafica.splice(parseInt(tamInter+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(quant));
             //intervalosGrafica[parseInt(tamInter + 1)] = parseInt(intervalosGrafica [tamInter]) + parseInt(quant);
           }
         }else{
           tamInter = parseInt(intervalosGrafica.length) - 1;
-          intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(buffer_proceso[k]));
+          intervalosGrafica.splice(parseInt(tamInter+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(buffer_proceso[k]));
           //intervalosGrafica[parseInt(tamInter + 1)] = parseInt(intervalosGrafica [tamInter]) + parseInt(buffer_proceso[k]);
           buffer_proceso.splice(k,1,'0');
         }
