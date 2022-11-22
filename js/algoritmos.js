@@ -137,6 +137,38 @@ function obtenDatosFIFO() {
     procesoFIFO();
   }
 }
+
+function obtenDatosSJF() {
+  let padre = document.getElementById("contenido_tabla");
+  let divConDatos = padre.childNodes;
+  for (let i = 1; i < divConDatos.length; i++) {
+    let datosDelDivPadre = divConDatos[i].childNodes; //Jalo todos los divs que tienen inputs
+    for (let j = 0; j < datosDelDivPadre.length; j++) {
+      //cada div tiene 3 inputs, los cuales guardan nombre, rcpu y (tll,Q etc)
+      let dato = datosDelDivPadre[j].firstChild;
+      if (dato.value == "") {
+        console.log("Campos vacios");
+        break;
+      }
+      //Voy guardando en arreglos los valores de cada input
+      if (j == 0) {
+        proceso.push(dato.value);
+      } else {
+        if (j == 1) {
+          rcpu.push(parseInt(dato.value));
+        } else {
+          mix.push(parseInt(dato.value));
+        }
+      }
+    }
+  }
+  //Si mi boton contiene el id de SRTF, realiza ese algoritmo
+  let btn = document.getElementById("clsSJF");
+  if (btn.id != null) {
+    procesoSJF();
+  }
+}
+
 /////////////////////////////////////////////INICIO FUNCIONES ALGORITMO SRTF/////////////////////////////////////////////////////////////
 
 function proceosSRTF() {
