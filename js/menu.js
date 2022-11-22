@@ -84,6 +84,35 @@ function agregarpp() {
   contenedor.appendChild(divDatos);
 }
 
+function agregarFIFO() {
+  //agregar otra columna a la tabla de datos
+  let contenedor = document.getElementById("contenido_tabla");
+  let divProceso = document.createElement("div");
+  let divRCPU = document.createElement("div");
+  let divTLL = document.createElement("div");
+  let divDatos = document.createElement("div");
+  let x = contenedor.childNodes;
+  let i = x[1].firstChild.firstChild.id;
+  console.log(i);
+  i = parseInt(i) + 1;
+  let inputProceso = document.createElement("input");
+  let inputRCPU = document.createElement("input");
+  let inputTLL = document.createElement("input");
+  inputProceso.id = i;
+  inputRCPU.type = "number";
+  inputTLL.type = "number";
+
+  divProceso.appendChild(inputProceso);
+  divRCPU.appendChild(inputRCPU);
+  divTLL.appendChild(inputTLL);
+
+  divDatos.appendChild(divProceso);
+  divDatos.appendChild(divRCPU);
+  divDatos.appendChild(divTLL);
+  divDatos.classList.add("contenido_tabla_datos");
+  contenedor.appendChild(divDatos);
+}
+
 function eliminar() {
   //elimina la ultima fila de la tabla datos
   let contenedor = document.getElementById("contenido_tabla");
@@ -161,6 +190,10 @@ function creaTabla(tipo, nombreTabla, tipoTabla) {
     if(tipoTabla=="PP"){
       boton.onclick = obtenDatosPP;
     }
+     if(tipoTabla=="FIFO"){
+      boton.onclick = obtenDatosFIFO;
+    }
+
 
     contenido.appendChild(accion);
 
@@ -242,6 +275,10 @@ function creaTabla(tipo, nombreTabla, tipoTabla) {
     }
     if(tipoTabla=="PP"){
       a.onclick = agregarpp
+      
+    }
+     if(tipoTabla=="FIFO"){
+      a.onclick = agregarFIFO
       
     }
 
