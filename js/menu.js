@@ -84,34 +84,6 @@ function agregarpp() {
   contenedor.appendChild(divDatos);
 }
 
-function agregarFIFO() {
-  //agregar otra columna a la tabla de datos
-  let contenedor = document.getElementById("contenido_tabla");
-  let divProceso = document.createElement("div");
-  let divRCPU = document.createElement("div");
-  let divTLL = document.createElement("div");
-  let divDatos = document.createElement("div");
-  let x = contenedor.childNodes;
-  let i = x[1].firstChild.firstChild.id;
-  console.log(i);
-  i = parseInt(i) + 1;
-  let inputProceso = document.createElement("input");
-  let inputRCPU = document.createElement("input");
-  let inputTLL = document.createElement("input");
-  inputProceso.id = i;
-  inputRCPU.type = "number";
-  inputTLL.type = "number";
-
-  divProceso.appendChild(inputProceso);
-  divRCPU.appendChild(inputRCPU);
-  divTLL.appendChild(inputTLL);
-
-  divDatos.appendChild(divProceso);
-  divDatos.appendChild(divRCPU);
-  divDatos.appendChild(divTLL);
-  divDatos.classList.add("contenido_tabla_datos");
-  contenedor.appendChild(divDatos);
-}
 function agregarSJF() {
   //agregar otra columna a la tabla de datos
   let contenedor = document.getElementById("contenido_tabla");
@@ -156,7 +128,6 @@ function eliminar() {
 //  let copia = base.cloneNode(true);
 //  contenedorPadre.appendChild(copia);
 //}
-
 function creaTabla(tipo, nombreTabla, tipoTabla) {
   //se genera la tabla de acuerdo a los parametros que se mandan
   if (document.getElementById("contenedor_contenido") == null) {
@@ -215,16 +186,15 @@ function creaTabla(tipo, nombreTabla, tipoTabla) {
     if (tipoTabla == "SRTF") {
       boton.onclick = obtenDatos;
     }
-    if(tipoTabla=="PP"){
+    if (tipoTabla == "PP") {
       boton.onclick = obtenDatosPP;
     }
-     if(tipoTabla=="FIFO"){
+    if (tipoTabla == "FIFO") {
       boton.onclick = obtenDatosFIFO;
     }
-     if(tipoTabla=="SJF"){
+    if (tipoTabla == "SJF") {
       boton.onclick = obtenDatosSJF;
     }
-
 
     contenido.appendChild(accion);
 
@@ -304,16 +274,14 @@ function creaTabla(tipo, nombreTabla, tipoTabla) {
     if (tipoTabla == "SRTF") {
       a.onclick = agregar;
     }
-    if(tipoTabla=="PP"){
-      a.onclick = agregarpp
-      
+    if (tipoTabla == "PP") {
+      a.onclick = agregarpp;
     }
-     if(tipoTabla=="FIFO"){
-      a.onclick = agregarFIFO
+    if (tipoTabla == "FIFO") {
+      a.onclick = agregar;
     }
-    if(tipoTabla=="SJF"){
-      a.onclick = agregarSJF
-      
+    if (tipoTabla == "SJF") {
+      a.onclick = agregarSJF;
     }
 
     aq.onclick = eliminar;
