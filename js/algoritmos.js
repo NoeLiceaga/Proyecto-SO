@@ -291,33 +291,41 @@ function procesoRR(){
     if(rcpuM==rcpu[0]){
       procesoN =0; 
     }
-    console.log(buffer_proceso[i]);
-    console.log(procesoN);
+    //console.log(buffer_proceso[i]);
+    
   }
+  
+   
    while(buffer_proceso[procesoN]>0){
     for(let k=0; k<proceso.length; k++){
-      if(buffer_proceso[k] > 0){
-        if(buffer_proceso[k] > quant){
-          buffer_proceso[k] = buffer_proceso[k] - quant;
+      if(buffer_proceso[k] > 0){// la rafaga de CPU es mayor a 0
+        if(buffer_proceso[k] >= quant){ // La rafaga de CPU es mayor al Quantum asignado
+          buffer_proceso.splice(k,1,parseInt(buffer_proceso[k]) - parseInt(quant));// se le resta lo que tiene el buffer menos el quantum
+          //buffer_proceso[k] = parseInt(buffer_proceso[k]) - parseInt(quant); 
           if(cont==0){
-            intervalosGrafica[k+1]= intervalosGrafica[k+1] + quant;
+            intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[k]) + parseInt(quant));
+            //intervalosGrafica[parseInt(k+1)]= parseInt(intervalosGrafica[k]) + parseInt(quant);
           }else{
-            tamInter = intervalosGrafica.length;
-            intervalosGrafica[tamInter + 1] = intervalosGrafica [tamInter+1] + quant;
+            tamInter = parseInt(intervalosGrafica.length) - 1;
+            intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(quant));
+            //intervalosGrafica[parseInt(tamInter + 1)] = parseInt(intervalosGrafica [tamInter]) + parseInt(quant);
           }
         }else{
-          tamInter = intervalosGrafica.length;
-          intervalosGrafica[tamInter + 1] = intervalosGrafica [tamInter + 1] + buffer_proceso[k];
-          buffer_proceso[k] = 0;
+          tamInter = parseInt(intervalosGrafica.length) - 1;
+          intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(buffer_proceso[k]));
+          //intervalosGrafica[parseInt(tamInter + 1)] = parseInt(intervalosGrafica [tamInter]) + parseInt(buffer_proceso[k]);
+          buffer_proceso.splice(k,1,'0');
         }
       }
     }
     cont++;
    }
    
-   for(let s = 0; s<intervalosGrafica.length; s++){
-    console.log (intervalosGrafica[s] + " ");
+   for(let s=0; s<intervalosGrafica.length; s++){
+    console.log(intervalosGrafica[s]);
    }
+  
+   
 
 }
 
