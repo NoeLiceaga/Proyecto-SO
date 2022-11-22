@@ -107,6 +107,36 @@ function obtenDatosPP() {
   }
 }
 
+function obtenDatosFIFO() {
+  let padre = document.getElementById("contenido_tabla");
+  let divConDatos = padre.childNodes;
+  for (let i = 1; i < divConDatos.length; i++) {
+    let datosDelDivPadre = divConDatos[i].childNodes; //Jalo todos los divs que tienen inputs
+    for (let j = 0; j < datosDelDivPadre.length; j++) {
+      //cada div tiene 3 inputs, los cuales guardan nombre, rcpu y (tll,Q etc)
+      let dato = datosDelDivPadre[j].firstChild;
+      if (dato.value == "") {
+        console.log("Campos vacios");
+        break;
+      }
+      //Voy guardando en arreglos los valores de cada input
+      if (j == 0) {
+        proceso.push(dato.value);
+      } else {
+        if (j == 1) {
+          rcpu.push(parseInt(dato.value));
+        } else {
+          mix.push(parseInt(dato.value));
+        }
+      }
+    }
+  }
+  //Si mi boton contiene el id de SRTF, realiza ese algoritmo
+  let btn = document.getElementById("clsFIFO");
+  if (btn.id != null) {
+    procesoFIFO();
+  }
+}
 /////////////////////////////////////////////INICIO FUNCIONES ALGORITMO SRTF/////////////////////////////////////////////////////////////
 
 function proceosSRTF() {
@@ -416,6 +446,68 @@ function procesoPP(){
   
 }
 /////////////////////////////////////////////FIN ROUND PP////////////////////////////////////////////////////////////////////////
+//////////////////////////Inicio FIFO////////////////////////////////////////
+function procesoFIFO(){
+  let datos_tabla = [];
+  let Atr = [];
+  let Ate = [];
+  let te=0;
+  let tr=0;
+  let totalAtr = 0;
+  let totalAte = 0;
+  let tme = 0;
+  let tmr = 0;
+  let graphArray=[]
+  let tableArray=[]
+  for (let c = 0; c < proceso.length; c++) {
+    datos_tabla.push(
+      (dicc = {
+        proceso: proceso[c],
+        rafagas: parseInt(rcpu[c]),
+        tll: parseInt(mix[c]),
+      })
+    );
+  }
+
+  datos_tabla.sort((a, b) => a.pr - b.pr);
+
+  datos_tabla.forEach(element => {
+    tr=tr+element.rafagas
+    Atr.push(tr)
+  });
+    totalAtr = Atr.reduce((a, b) => a + b, 0);
+  for(let y=0; y<datos_tabla.length;y++){
+    te=(Atr[y]-datos_tabla[y].rafagas);
+    Ate.push(te)
+  }
+  totalAte = Ate.reduce((a, b) => a + b, 0);
+  tme = totalAte/(datos_tabla.length)
+  tmr = totalAtr/(datos_tabla.length)
+  
+  for (let index = 0; index < Ate.length; index++) {
+    graphArray.push({
+      "process":datos_tabla[index].proceso,
+      "cuenta":Atr[index],
+      "espera":Ate[index]
+    
+  })
+  }
+  for (let index = 0; index < Ate.length; index++) {
+    tableArray.push({
+      "process":datos_tabla[index].proceso,
+      "cuenta":datos_tabla,
+      "espera":Ate[index]
+    
+  })
+  }
+  generaGrafica(graphArray)
+  datosOperaciones(graphArray,tme)
+  proceso = [];
+  rcpu = [];
+  mix = [];
+  
+}
+//FIN FIFO////////////
 
 //Genera la tabla de procesos,necesita un arreglo de objetos con los identificadores process y cuenta, revisar linea 81 o la funcion proceosSRTF
 function generaGrafica(elementos) {
