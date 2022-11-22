@@ -4,7 +4,7 @@ let mix = []; //Arreglo con (tll, Quantums, Prioridad, etc), depende del tipo de
 let repetidos = 0; ////Cuantos tiempos de llegada se repiten, ejem. 2 y 4
 let arrayTllRepetidos = []; //Arreglo con la cantidad de cada tiempo de llamada reptidos ejem. 3 en tiempo 2 y 2 en tiempo 4
 let tllInicial = 0; //Sirve para saber en que tll entró el primer proceso
-let quant=0; // Variable global del quantum en RR
+let quant = 0; // Variable global del quantum en RR
 
 function obtenDatos() {
   let padre = document.getElementById("contenido_tabla");
@@ -37,9 +37,7 @@ function obtenDatos() {
   }
 }
 
-
 function obtenDatosRR() {
-  
   let padre = document.getElementById("contenido_tabla");
   let divConDatos = padre.childNodes;
   for (let i = 1; i < divConDatos.length; i++) {
@@ -58,15 +56,13 @@ function obtenDatosRR() {
         if (j == 1) {
           rcpu.push(parseInt(dato.value));
         } else {
-          if(i == 1){
+          if (i == 1) {
             quant = dato.value;
           }
-          
         }
       }
     }
   }
-  
 
   //Si mi boton contiene el id de SRTF, realiza ese algoritmo
   let btn = document.getElementById("RR");
@@ -80,6 +76,98 @@ function obtenDatosRR() {
   }
 }
 
+function obtenDatosPP() {
+  let padre = document.getElementById("contenido_tabla");
+  let divConDatos = padre.childNodes;
+  for (let i = 1; i < divConDatos.length; i++) {
+    let datosDelDivPadre = divConDatos[i].childNodes; //Jalo todos los divs que tienen inputs
+    for (let j = 0; j < datosDelDivPadre.length; j++) {
+      //cada div tiene 3 inputs, los cuales guardan nombre, rcpu y (tll,Q etc)
+      let dato = datosDelDivPadre[j].firstChild;
+      if (dato.value == "") {
+        console.log("Campos vacios");
+        break;
+      }
+      //Voy guardando en arreglos los valores de cada input
+      if (j == 0) {
+        proceso.push(dato.value);
+      } else {
+        if (j == 1) {
+          rcpu.push(parseInt(dato.value));
+        } else {
+          mix.push(parseInt(dato.value));
+        }
+      }
+    }
+  }
+  //Si mi boton contiene el id de SRTF, realiza ese algoritmo
+  let btn = document.getElementById("clsPP");
+  if (btn.id != null) {
+    procesoPP();
+  }
+}
+
+function obtenDatosFIFO() {
+  let padre = document.getElementById("contenido_tabla");
+  let divConDatos = padre.childNodes;
+  for (let i = 1; i < divConDatos.length; i++) {
+    let datosDelDivPadre = divConDatos[i].childNodes; //Jalo todos los divs que tienen inputs
+    for (let j = 0; j < datosDelDivPadre.length; j++) {
+      //cada div tiene 3 inputs, los cuales guardan nombre, rcpu y (tll,Q etc)
+      let dato = datosDelDivPadre[j].firstChild;
+      if (dato.value == "") {
+        console.log("Campos vacios");
+        break;
+      }
+      //Voy guardando en arreglos los valores de cada input
+      if (j == 0) {
+        proceso.push(dato.value);
+      } else {
+        if (j == 1) {
+          rcpu.push(parseInt(dato.value));
+        } else {
+          mix.push(parseInt(dato.value));
+        }
+      }
+    }
+  }
+  //Si mi boton contiene el id de SRTF, realiza ese algoritmo
+  let btn = document.getElementById("clsFIFO");
+  if (btn.id != null) {
+    procesoFIFO();
+  }
+}
+
+function obtenDatosSJF() {
+  let padre = document.getElementById("contenido_tabla");
+  let divConDatos = padre.childNodes;
+  for (let i = 1; i < divConDatos.length; i++) {
+    let datosDelDivPadre = divConDatos[i].childNodes; //Jalo todos los divs que tienen inputs
+    for (let j = 0; j < datosDelDivPadre.length; j++) {
+      //cada div tiene 3 inputs, los cuales guardan nombre, rcpu y (tll,Q etc)
+      let dato = datosDelDivPadre[j].firstChild;
+      if (dato.value == "") {
+        console.log("Campos vacios");
+        break;
+      }
+      //Voy guardando en arreglos los valores de cada input
+      if (j == 0) {
+        proceso.push(dato.value);
+      } else {
+        if (j == 1) {
+          rcpu.push(parseInt(dato.value));
+        } else {
+          mix.push(parseInt(dato.value));
+        }
+      }
+    }
+  }
+  //Si mi boton contiene el id de SRTF, realiza ese algoritmo
+  let btn = document.getElementById("clsSJF");
+  if (btn.id != null) {
+    procesoSJF();
+  }
+}
 
 /////////////////////////////////////////////INICIO FUNCIONES ALGORITMO SRTF/////////////////////////////////////////////////////////////
 
@@ -273,65 +361,181 @@ function verificaTiempoLlegadasRepetidos(datos_tabla) {
 
 /////////////////////////////////////////////INICIO ROUND ROBIN /////////////////////////////////////////////////////////////////
 
-function procesoRR(){
-
+function procesoRR() {
   let buffer_proceso = [];
   let intervalosGrafica = [];
   intervalosGrafica[0] = 0;
   let rcpuM = rcpu[0];
-  let procesoN=0;
-  let cont=0;
+  let procesoN = 0;
+  let cont = 0;
   let tamInter = 0;
-  for(let i=0; i<proceso.length; i++){
-    buffer_proceso[i]= rcpu[i];
-    if(rcpu[i]>rcpuM){
+  for (let i = 0; i < proceso.length; i++) {
+    buffer_proceso[i] = rcpu[i];
+    if (rcpu[i] > rcpuM) {
       rcpuM = rcpu[i];
-      procesoN=i;
+      procesoN = i;
     }
-    if(rcpuM==rcpu[0]){
-      procesoN =0; 
+    if (rcpuM == rcpu[0]) {
+      procesoN = 0;
     }
     //console.log(buffer_proceso[i]);
     
   }
-  
-   
    while(buffer_proceso[procesoN]>0){
     for(let k=0; k<proceso.length; k++){
-      if(buffer_proceso[k] > 0){// la rafaga de CPU es mayor a 0
-        if(buffer_proceso[k] >= quant){ // La rafaga de CPU es mayor al Quantum asignado
-          buffer_proceso.splice(k,1,parseInt(buffer_proceso[k]) - parseInt(quant));// se le resta lo que tiene el buffer menos el quantum
-          //buffer_proceso[k] = parseInt(buffer_proceso[k]) - parseInt(quant); 
+      if(buffer_proceso[k] > 0){
+        if(buffer_proceso[k] > quant){
+          buffer_proceso[k] = buffer_proceso[k] - quant;
           if(cont==0){
-            intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[k]) + parseInt(quant));
-            //intervalosGrafica[parseInt(k+1)]= parseInt(intervalosGrafica[k]) + parseInt(quant);
+            intervalosGrafica[k+1]= intervalosGrafica[k+1] + quant;
           }else{
-            tamInter = parseInt(intervalosGrafica.length) - 1;
-            intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(quant));
-            //intervalosGrafica[parseInt(tamInter + 1)] = parseInt(intervalosGrafica [tamInter]) + parseInt(quant);
+            tamInter = intervalosGrafica.length;
+            intervalosGrafica[tamInter + 1] = intervalosGrafica [tamInter+1] + quant;
           }
         }else{
-          tamInter = parseInt(intervalosGrafica.length) - 1;
-          intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(buffer_proceso[k]));
-          //intervalosGrafica[parseInt(tamInter + 1)] = parseInt(intervalosGrafica [tamInter]) + parseInt(buffer_proceso[k]);
-          buffer_proceso.splice(k,1,'0');
+          tamInter = intervalosGrafica.length;
+          intervalosGrafica[tamInter + 1] = intervalosGrafica [tamInter + 1] + buffer_proceso[k];
+          buffer_proceso[k] = 0;
         }
       }
     }
     cont++;
    }
    
-   for(let s=0; s<intervalosGrafica.length; s++){
-    console.log(intervalosGrafica[s]);
+   for(let s = 0; s<intervalosGrafica.length; s++){
+    console.log (intervalosGrafica[s] + " ");
    }
-  
-   
 
 }
 
-
 /////////////////////////////////////////////FIN ROUND ROBIN////////////////////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////INICIO PP////////////////////////////////////////////////////////////////////////
+function procesoPP(){
+  let datos_tabla = [];
+  let Atr = [];
+  let Ate = [];
+  let te=0;
+  let tr=0;
+  let totalAtr = 0;
+  let totalAte = 0;
+  let tme = 0;
+  let tmr = 0;
+  let graphArray=[]
+  let tableArray=[]
+  for (let c = 0; c < proceso.length; c++) {
+    datos_tabla.push(
+      (dicc = {
+        proceso: proceso[c],
+        rafagas: parseInt(rcpu[c]),
+        pr: parseInt(mix[c]),
+      })
+    );
+  }
+
+
+
+  datos_tabla.sort((a, b) => a.pr - b.pr);
+
+  datos_tabla.forEach(element => {
+    tr=tr+element.rafagas
+    Atr.push(tr)
+  });
+    totalAtr = Atr.reduce((a, b) => a + b, 0);
+  for(let y=0; y<datos_tabla.length;y++){
+    te=(Atr[y]-datos_tabla[y].rafagas);
+    Ate.push(te)
+  }
+  totalAte = Ate.reduce((a, b) => a + b, 0);
+  tme = totalAte/(datos_tabla.length)
+  tmr = totalAtr/(datos_tabla.length)
+  
+  for (let index = 0; index < Ate.length; index++) {
+    graphArray.push({
+      "process":datos_tabla[index].proceso,
+      "cuenta":Atr[index],
+      "espera":Ate[index]
+    
+  })
+  }
+  for (let index = 0; index < Ate.length; index++) {
+    tableArray.push({
+      "process":datos_tabla[index].proceso,
+      "cuenta":datos_tabla,
+      "espera":Ate[index]
+    
+  })
+  }
+  generaGrafica(graphArray)
+  datosOperaciones(graphArray,tme)
+  proceso = [];
+  rcpu = [];
+  mix = [];
+  
+}
+/////////////////////////////////////////////FIN ROUND PP////////////////////////////////////////////////////////////////////////
+//////////////////////////Inicio FIFO////////////////////////////////////////
+function procesoFIFO(){
+  let datos_tabla = [];
+  let Atr = [];
+  let Ate = [];
+  let te=0;
+  let tr=0;
+  let totalAtr = 0;
+  let totalAte = 0;
+  let tme = 0;
+  let tmr = 0;
+  let graphArray=[]
+  let tableArray=[]
+  for (let c = 0; c < proceso.length; c++) {
+    datos_tabla.push(
+      (dicc = {
+        proceso: proceso[c],
+        rafagas: parseInt(rcpu[c]),
+        tll: parseInt(mix[c]),
+      })
+    );
+  }
+
+  datos_tabla.sort((a, b) => a.pr - b.pr);
+
+  datos_tabla.forEach(element => {
+    tr=tr+element.rafagas
+    Atr.push(tr)
+  });
+    totalAtr = Atr.reduce((a, b) => a + b, 0);
+  for(let y=0; y<datos_tabla.length;y++){
+    te=(Atr[y]-datos_tabla[y].rafagas);
+    Ate.push(te)
+  }
+  totalAte = Ate.reduce((a, b) => a + b, 0);
+  tme = totalAte/(datos_tabla.length)
+  tmr = totalAtr/(datos_tabla.length)
+  
+  for (let index = 0; index < Ate.length; index++) {
+    graphArray.push({
+      "process":datos_tabla[index].proceso,
+      "cuenta":Atr[index],
+      "espera":Ate[index]
+    
+  })
+  }
+  for (let index = 0; index < Ate.length; index++) {
+    tableArray.push({
+      "process":datos_tabla[index].proceso,
+      "cuenta":datos_tabla,
+      "espera":Ate[index]
+    
+  })
+  }
+  generaGrafica(graphArray)
+  datosOperaciones(graphArray,tme)
+  proceso = [];
+  rcpu = [];
+  mix = [];
+  
+}
+//FIN FIFO////////////
 
 //Genera la tabla de procesos,necesita un arreglo de objetos con los identificadores process y cuenta, revisar linea 81 o la funcion proceosSRTF
 function generaGrafica(elementos) {
@@ -386,7 +590,7 @@ function generaGrafica(elementos) {
   }
 }
 
-function datosOperaciones(tabla_grafica) {
+function datosOperaciones(tabla_grafica,tiempoEspera) {
   let tme = 0;
   let acumulador_tme = 0;
   let tmr = 0;
@@ -463,7 +667,10 @@ function datosOperaciones(tabla_grafica) {
     TE_datos.appendChild(te_te);
     TE.appendChild(TE_datos);
   }
-  tme = parseFloat(acumulador_tme / proceso.length);
+  if(tiempoEspera!=null)
+    tme=tiempoEspera
+  else
+    tme = parseFloat(acumulador_tme / proceso.length);
   tmr = parseFloat(acumulador_tmr / proceso.length);
   operaciones_datos.appendChild(TE);
   operaciones.appendChild(operaciones_datos);
