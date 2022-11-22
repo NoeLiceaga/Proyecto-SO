@@ -384,7 +384,7 @@ function procesoRR(){
     //console.log(buffer_proceso[i]);
     
   }
-  
+  let tmeRR = 0;
    
    while(buffer_proceso[procesoN]>0){
     for(let k=0; k<proceso.length; k++){
@@ -395,6 +395,7 @@ function procesoRR(){
           if(cont==0){
             intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[k]) + parseInt(quant));
             nombresGrafica.splice(k,0,proceso[k]);
+            
             //intervalosGrafica[parseInt(k+1)]= parseInt(intervalosGrafica[k]) + parseInt(quant);
           }else{
             tamInter = parseInt(intervalosGrafica.length) - 1;
@@ -415,19 +416,30 @@ function procesoRR(){
    }
    
    for(let s=0; s<intervalosGrafica.length; s++){
+    
     console.log(intervalosGrafica[s]);
     console.log(nombresGrafica[s]);
    }
+
+   for(let i=0; i<proceso.length; i++){
+    tmeRR+=intervalosGrafica[i];
+   }
+   
+   tmeRR = parseFloat(tmeRR / proceso.length);
    
    for(let m = 0; m<intervalosGrafica.length-1; m++){
     datos_grafica.push(
       (dicc = {
         process: nombresGrafica[m],
         cuenta: intervalosGrafica[m+1],
+        espera: intervalosGrafica[m],
       })
     );
    }
+
+   
    generaGrafica(datos_grafica);
+   datosOperaciones(datos_grafica, tmeRR);
    
 }
 
