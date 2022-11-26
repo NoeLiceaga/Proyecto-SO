@@ -37,6 +37,37 @@ function obtenDatos() {
   }
 }
 
+function obtenDatosSJF() {
+  let padre = document.getElementById("contenido_tabla");
+  let divConDatos = padre.childNodes;
+  for (let i = 1; i < divConDatos.length; i++) {
+    let datosDelDivPadre = divConDatos[i].childNodes; //Jalo todos los divs que tienen inputs
+    for (let j = 0; j < datosDelDivPadre.length; j++) {
+      //cada div tiene 3 inputs, los cuales guardan nombre, rcpu y (tll,Q etc)
+      let dato = datosDelDivPadre[j].firstChild;
+      if (dato.value == "") {
+        console.log("Campos vacios");
+        break;
+      }
+      //Voy guardando en arreglos los valores de cada input
+      if (j == 0) {
+        proceso.push(dato.value);
+      } else {
+        if (j == 1) {
+          rcpu.push(parseInt(dato.value));
+        } else {
+          mix.push(parseInt(dato.value));
+        }
+      }
+    }
+  }
+  //Si mi boton contiene el id de SRTF, realiza ese algoritmo
+  let btn = document.getElementById("SJF");
+  if (btn.id != null) {
+    procesoSJF();
+  }
+}
+
 function obtenDatosRR() {
   let padre = document.getElementById("contenido_tabla");
   let divConDatos = padre.childNodes;
@@ -444,7 +475,77 @@ function procesoRR(){
 }
 
 /////////////////////////////////////////////FIN ROUND ROBIN////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////INICIO SJF ///////////////////////////////////////////////////////////
 
+function procesoSJF(){
+  let valorMenor = 0;
+  let datos_tabla= [];
+  
+  let procesos = [];
+  let rafagas = [];
+  let indice=0;
+
+  for (let c = 0; c < proceso.length; c++) {
+    datos_tabla.push(
+      (dicc = {
+        proceso: proceso[c],
+        rafagas: parseInt(rcpu[c]),
+        tll: parseInt(mix[c]),
+      })
+    );
+  }
+  valorMenor = mix[0];
+
+  for(let i=1; i<proceso.length; i++){
+    if(mix[i] < valorMenor){
+      valorMenor=mix[i];
+      indice= i;
+    }
+  }
+  
+  //agregamos el proceso con el menor tiempo de llegada
+  procesos.splice(0,0,proceso[indice]);
+  rafagas.splice(0,0,rcpu[indice]);
+
+  //Borramos el proceso de menor tiempo de llegada
+  let tablaNueva = borraDatosTabla(datos_tabla, indice);
+  while(tablaNueva.length!=0){
+    tablaNueva = encontrarRcpuMenor(tablaNueva);
+    procesos.splice(procesos.length,0,proceso[indice]);
+    rafagas.splice(rafagas.length,0,rcpu[indice]);
+  }
+
+  for(let a=0; a<proceso.length; a++){
+    console.log(procesos[a]);
+  }
+  
+  
+
+}
+
+function borraDatosTabla(datos_tabla, indice) {
+  let newDatos_tabla = datos_tabla.filter((item) => parseInt(item.mix) == parseInt(valorMenor));
+  return newDatos_tabla;
+}
+
+function encontrarRcpuMenor(datos_tabla){
+  let menorRafaga=rcpu[0];
+  let nombreMenor = "";
+  for(let s=0; s<proceso.length; s++){
+    if(rcpu[s]<menorRafaga){
+      menorRafaga = rcpu[s];
+      nombreMenor = proceso[s];
+      indice=s;
+    }
+  }
+  tablaNueva = borraDatosTabla(datos_tabla, indice);
+  return tablaNueva;
+}
+
+
+
+
+////////////////////////////////////////////FIN SJF ///////////////////////////////////////////////////////////
 /////////////////////////////////////////////INICIO PP////////////////////////////////////////////////////////////////////////
 function procesoPP(){
   let datos_tabla = [];
