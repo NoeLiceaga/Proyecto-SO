@@ -476,14 +476,18 @@ function procesoRR(){
 
 /////////////////////////////////////////////FIN ROUND ROBIN////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////INICIO SJF ///////////////////////////////////////////////////////////
+let indiceS=0;
+let nombreMenor;
 
 function procesoSJF(){
   let valorMenor = 0;
   let datos_tabla= [];
-  
+  let nombreProceso;
   let procesos = [];
   let rafagas = [];
-  let indice=0;
+  let tll=[];
+  let datos_grafica=[];
+  let contador=0;
 
   for (let c = 0; c < proceso.length; c++) {
     datos_tabla.push(
@@ -495,55 +499,81 @@ function procesoSJF(){
     );
   }
   valorMenor = mix[0];
-
+  nombreProceso = proceso[0];
+  contador++;
   for(let i=1; i<proceso.length; i++){
     if(mix[i] < valorMenor){
       valorMenor=mix[i];
-      indice= i;
+      nombreProceso=proceso[i];
+      indiceS= i;
+      contador++;
     }
   }
-  
-  //agregamos el proceso con el menor tiempo de llegada
-  procesos.splice(0,0,proceso[indice]);
-  rafagas.splice(0,0,rcpu[indice]);
 
-  //Borramos el proceso de menor tiempo de llegada
-  let tablaNueva = borraDatosTabla(datos_tabla, indice);
-  while(tablaNueva.length!=0){
-    tablaNueva = encontrarRcpuMenor(tablaNueva);
-    procesos.splice(procesos.length,0,proceso[indice]);
-    rafagas.splice(rafagas.length,0,rcpu[indice]);
+  if(contador<=2){
+    //agregamos el proceso con el menor tiempo de llegada
+    procesos.splice(0,0,proceso[indiceS]);
+    rafagas.splice(0,0,rcpu[indiceS]);
+
+    //Borramos el proceso de menor tiempo de llegada
+    let tablaNueva = borraDatosTabla(datos_tabla, nombreProceso);
+    while(tablaNueva.length!=0){
+      encontrarRcpuMenor(tablaNueva);
+      procesos.splice(procesos.length,0,tablaNueva[indiceS].proceso);
+      rafagas.splice(rafagas.length,0,tablaNueva[indiceS].rafagas);
+      tll.splice(rafagas.length, 0,tablaNueva[indiceS].tll );
+      tablaNueva = borraDatosTabla(tablaNueva, nombreMenor);
+    }
+  }else{
+    
   }
+  
+  
 
   for(let a=0; a<proceso.length; a++){
     console.log(procesos[a]);
+    console.log(rafagas[a]);
   }
-  
-  
 
+  for (let c = 0; c < proceso.length; c++) {
+    datos_grafica.push(
+      (dicc = {
+        process: procesos[c],
+        cuenta: parseInt(rafagas[c]),
+        espera : parseInt(tll[c]),
+      })
+    );
+  }
+  generaGrafica(datos_grafica);
 }
 
-function borraDatosTabla(datos_tabla, indice) {
-  let newDatos_tabla = datos_tabla.filter((item) => parseInt(item.mix) == parseInt(valorMenor));
+function verificarRepetido(datos_tabla, valor){
+  let rProceso = [];
+  let rRafagas = [];
+  let rTll = [];
+  for(let i=0; i<datos_tabla.length; i++){
+    if(datos_tabla[i].tll){
+
+    }
+  }
+}
+
+function borraDatosTabla(datos_tabla, nombreProceso) {
+  let newDatos_tabla = datos_tabla.filter((item) => item.proceso !== nombreProceso);
   return newDatos_tabla;
 }
 
 function encontrarRcpuMenor(datos_tabla){
-  let menorRafaga=rcpu[0];
-  let nombreMenor = "";
-  for(let s=0; s<proceso.length; s++){
-    if(rcpu[s]<menorRafaga){
-      menorRafaga = rcpu[s];
-      nombreMenor = proceso[s];
-      indice=s;
+  let menorRafaga=datos_tabla[0].rafagas;
+  
+  for(let s=0; s<datos_tabla.length; s++){
+    if(datos_tabla[s].rafagas<=menorRafaga){
+      menorRafaga = datos_tabla[s].rafagas;
+      nombreMenor = datos_tabla[s].proceso;
+      indiceS=s;
     }
-  }
-  tablaNueva = borraDatosTabla(datos_tabla, indice);
-  return tablaNueva;
+  } 
 }
-
-
-
 
 ////////////////////////////////////////////FIN SJF ///////////////////////////////////////////////////////////
 /////////////////////////////////////////////INICIO PP////////////////////////////////////////////////////////////////////////
@@ -577,11 +607,13 @@ function procesoPP(){
     tr=tr+element.rafagas
     Atr.push(tr)
   });
-    totalAtr = Atr.reduce((a, b) => a + b, 0);
+
+  totalAtr = Atr.reduce((a, b) => a + b, 0);
   for(let y=0; y<datos_tabla.length;y++){
     te=(Atr[y]-datos_tabla[y].rafagas);
     Ate.push(te)
   }
+  
   totalAte = Ate.reduce((a, b) => a + b, 0);
   tme = totalAte/(datos_tabla.length)
   tmr = totalAtr/(datos_tabla.length)
