@@ -392,102 +392,115 @@ function verificaTiempoLlegadasRepetidos(datos_tabla) {
 
 /////////////////////////////////////////////INICIO ROUND ROBIN /////////////////////////////////////////////////////////////////
 
-function procesoRR(){
-
+function procesoRR() {
   let buffer_proceso = [];
   let intervalosGrafica = [];
   intervalosGrafica[0] = 0;
   let rcpuM = rcpu[0];
-  let procesoN=0;
-  let cont=0;
+  let procesoN = 0;
+  let cont = 0;
   let tamInter = 0;
-  let datos_grafica=[];
+  let datos_grafica = [];
   let nombresGrafica = [];
-  for(let i=0; i<proceso.length; i++){
-    buffer_proceso[i]= rcpu[i];
-    if(rcpu[i]>rcpuM){
+  for (let i = 0; i < proceso.length; i++) {
+    buffer_proceso[i] = rcpu[i];
+    if (rcpu[i] > rcpuM) {
       rcpuM = rcpu[i];
-      procesoN=i;
+      procesoN = i;
     }
-    if(rcpuM==rcpu[0]){
-      procesoN =0; 
+    if (rcpuM == rcpu[0]) {
+      procesoN = 0;
     }
     //console.log(buffer_proceso[i]);
-    
   }
   let tmeRR = 0;
-   
-   while(buffer_proceso[procesoN]>0){
-    for(let k=0; k<proceso.length; k++){
-      if(buffer_proceso[k] > 0){// la rafaga de CPU es mayor a 0
-        if(buffer_proceso[k] >= quant){ // La rafaga de CPU es mayor al Quantum asignado
-          buffer_proceso.splice(k,1,parseInt(buffer_proceso[k]) - parseInt(quant));// se le resta lo que tiene el buffer menos el quantum
-          //buffer_proceso[k] = parseInt(buffer_proceso[k]) - parseInt(quant); 
-          if(cont==0){
-            intervalosGrafica.splice(parseInt(k+1), 0, parseInt(intervalosGrafica[k]) + parseInt(quant));
-            nombresGrafica.splice(k,0,proceso[k]);
-            
+
+  while (buffer_proceso[procesoN] > 0) {
+    for (let k = 0; k < proceso.length; k++) {
+      if (buffer_proceso[k] > 0) {
+        // la rafaga de CPU es mayor a 0
+        if (buffer_proceso[k] >= quant) {
+          // La rafaga de CPU es mayor al Quantum asignado
+          buffer_proceso.splice(
+            k,
+            1,
+            parseInt(buffer_proceso[k]) - parseInt(quant)
+          ); // se le resta lo que tiene el buffer menos el quantum
+          //buffer_proceso[k] = parseInt(buffer_proceso[k]) - parseInt(quant);
+          if (cont == 0) {
+            intervalosGrafica.splice(
+              parseInt(k + 1),
+              0,
+              parseInt(intervalosGrafica[k]) + parseInt(quant)
+            );
+            nombresGrafica.splice(k, 0, proceso[k]);
+
             //intervalosGrafica[parseInt(k+1)]= parseInt(intervalosGrafica[k]) + parseInt(quant);
-          }else{
+          } else {
             tamInter = parseInt(intervalosGrafica.length) - 1;
-            intervalosGrafica.splice(parseInt(tamInter+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(quant));
-            nombresGrafica.splice(parseInt(tamInter+1),0,proceso[k]);
+            intervalosGrafica.splice(
+              parseInt(tamInter + 1),
+              0,
+              parseInt(intervalosGrafica[tamInter]) + parseInt(quant)
+            );
+            nombresGrafica.splice(parseInt(tamInter + 1), 0, proceso[k]);
             //intervalosGrafica[parseInt(tamInter + 1)] = parseInt(intervalosGrafica [tamInter]) + parseInt(quant);
           }
-        }else{
+        } else {
           tamInter = parseInt(intervalosGrafica.length) - 1;
-          intervalosGrafica.splice(parseInt(tamInter+1), 0, parseInt(intervalosGrafica[tamInter]) + parseInt(buffer_proceso[k]));
-          nombresGrafica.splice(parseInt(tamInter+1),0,proceso[k]);
+          intervalosGrafica.splice(
+            parseInt(tamInter + 1),
+            0,
+            parseInt(intervalosGrafica[tamInter]) + parseInt(buffer_proceso[k])
+          );
+          nombresGrafica.splice(parseInt(tamInter + 1), 0, proceso[k]);
           //intervalosGrafica[parseInt(tamInter + 1)] = parseInt(intervalosGrafica [tamInter]) + parseInt(buffer_proceso[k]);
-          buffer_proceso.splice(k,1,'0');
+          buffer_proceso.splice(k, 1, "0");
         }
       }
     }
     cont++;
-   }
-   
-   for(let s=0; s<intervalosGrafica.length; s++){
-    
+  }
+
+  for (let s = 0; s < intervalosGrafica.length; s++) {
     console.log(intervalosGrafica[s]);
     console.log(nombresGrafica[s]);
-   }
+  }
 
-   for(let i=0; i<proceso.length; i++){
-    tmeRR+=intervalosGrafica[i];
-   }
-   
-   tmeRR = parseFloat(tmeRR / proceso.length);
-   
-   for(let m = 0; m<intervalosGrafica.length-1; m++){
+  for (let i = 0; i < proceso.length; i++) {
+    tmeRR += intervalosGrafica[i];
+  }
+
+  tmeRR = parseFloat(tmeRR / proceso.length);
+
+  for (let m = 0; m < intervalosGrafica.length - 1; m++) {
     datos_grafica.push(
       (dicc = {
         process: nombresGrafica[m],
-        cuenta: intervalosGrafica[m+1],
+        cuenta: intervalosGrafica[m + 1],
         espera: intervalosGrafica[m],
       })
     );
-   }
+  }
 
-   
-   generaGrafica(datos_grafica);
-   datosOperaciones(datos_grafica, tmeRR);
-   
+  generaGrafica(datos_grafica);
+  datosOperaciones(datos_grafica, tmeRR);
 }
 
 /////////////////////////////////////////////FIN ROUND ROBIN////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////INICIO SJF ///////////////////////////////////////////////////////////
-let indiceS=0;
+let indiceS = 0;
 let nombreMenor;
 
-function procesoSJF(){
+function procesoSJF() {
   let valorMenor = 0;
-  let datos_tabla= [];
+  let datos_tabla = [];
   let nombreProceso;
   let procesos = [];
   let rafagas = [];
-  let tll=[];
-  let datos_grafica=[];
-  let contador=0;
+  let tll = [];
+  let datos_grafica = [];
+  let contador = 0;
 
   for (let c = 0; c < proceso.length; c++) {
     datos_tabla.push(
@@ -501,36 +514,33 @@ function procesoSJF(){
   valorMenor = mix[0];
   nombreProceso = proceso[0];
   contador++;
-  for(let i=1; i<proceso.length; i++){
-    if(mix[i] < valorMenor){
-      valorMenor=mix[i];
-      nombreProceso=proceso[i];
-      indiceS= i;
+  for (let i = 1; i < proceso.length; i++) {
+    if (mix[i] < valorMenor) {
+      valorMenor = mix[i];
+      nombreProceso = proceso[i];
+      indiceS = i;
       contador++;
     }
   }
 
-  if(contador<=2){
+  if (contador <= 2) {
     //agregamos el proceso con el menor tiempo de llegada
-    procesos.splice(0,0,proceso[indiceS]);
-    rafagas.splice(0,0,rcpu[indiceS]);
+    procesos.splice(0, 0, proceso[indiceS]);
+    rafagas.splice(0, 0, rcpu[indiceS]);
 
     //Borramos el proceso de menor tiempo de llegada
     let tablaNueva = borraDatosTabla(datos_tabla, nombreProceso);
-    while(tablaNueva.length!=0){
+    while (tablaNueva.length != 0) {
       encontrarRcpuMenor(tablaNueva);
-      procesos.splice(procesos.length,0,tablaNueva[indiceS].proceso);
-      rafagas.splice(rafagas.length,0,tablaNueva[indiceS].rafagas);
-      tll.splice(rafagas.length, 0,tablaNueva[indiceS].tll );
+      procesos.splice(procesos.length, 0, tablaNueva[indiceS].proceso);
+      rafagas.splice(rafagas.length, 0, tablaNueva[indiceS].rafagas);
+      tll.splice(rafagas.length, 0, tablaNueva[indiceS].tll);
       tablaNueva = borraDatosTabla(tablaNueva, nombreMenor);
     }
-  }else{
-    
+  } else {
   }
-  
-  
 
-  for(let a=0; a<proceso.length; a++){
+  for (let a = 0; a < proceso.length; a++) {
     console.log(procesos[a]);
     console.log(rafagas[a]);
   }
@@ -540,55 +550,56 @@ function procesoSJF(){
       (dicc = {
         process: procesos[c],
         cuenta: parseInt(rafagas[c]),
-        espera : parseInt(tll[c]),
+        espera: parseInt(tll[c]),
       })
     );
   }
   generaGrafica(datos_grafica);
 }
 
-function verificarRepetido(datos_tabla, valor){
+function verificarRepetido(datos_tabla, valor) {
   let rProceso = [];
   let rRafagas = [];
   let rTll = [];
-  for(let i=0; i<datos_tabla.length; i++){
-    if(datos_tabla[i].tll){
-
+  for (let i = 0; i < datos_tabla.length; i++) {
+    if (datos_tabla[i].tll) {
     }
   }
 }
 
 function borraDatosTabla(datos_tabla, nombreProceso) {
-  let newDatos_tabla = datos_tabla.filter((item) => item.proceso !== nombreProceso);
+  let newDatos_tabla = datos_tabla.filter(
+    (item) => item.proceso !== nombreProceso
+  );
   return newDatos_tabla;
 }
 
-function encontrarRcpuMenor(datos_tabla){
-  let menorRafaga=datos_tabla[0].rafagas;
-  
-  for(let s=0; s<datos_tabla.length; s++){
-    if(datos_tabla[s].rafagas<=menorRafaga){
+function encontrarRcpuMenor(datos_tabla) {
+  let menorRafaga = datos_tabla[0].rafagas;
+
+  for (let s = 0; s < datos_tabla.length; s++) {
+    if (datos_tabla[s].rafagas <= menorRafaga) {
       menorRafaga = datos_tabla[s].rafagas;
       nombreMenor = datos_tabla[s].proceso;
-      indiceS=s;
+      indiceS = s;
     }
-  } 
+  }
 }
 
 ////////////////////////////////////////////FIN SJF ///////////////////////////////////////////////////////////
 /////////////////////////////////////////////INICIO PP////////////////////////////////////////////////////////////////////////
-function procesoPP(){
+function procesoPP() {
   let datos_tabla = [];
   let Atr = [];
   let Ate = [];
-  let te=0;
-  let tr=0;
+  let te = 0;
+  let tr = 0;
   let totalAtr = 0;
   let totalAte = 0;
   let tme = 0;
   let tmr = 0;
-  let graphArray=[]
-  let tableArray=[]
+  let graphArray = [];
+  let tableArray = [];
   for (let c = 0; c < proceso.length; c++) {
     datos_tabla.push(
       (dicc = {
@@ -599,62 +610,58 @@ function procesoPP(){
     );
   }
 
-
-
   datos_tabla.sort((a, b) => a.pr - b.pr);
 
-  datos_tabla.forEach(element => {
-    tr=tr+element.rafagas
-    Atr.push(tr)
+  datos_tabla.forEach((element) => {
+    tr = tr + element.rafagas;
+    Atr.push(tr);
   });
 
   totalAtr = Atr.reduce((a, b) => a + b, 0);
-  for(let y=0; y<datos_tabla.length;y++){
-    te=(Atr[y]-datos_tabla[y].rafagas);
-    Ate.push(te)
+  for (let y = 0; y < datos_tabla.length; y++) {
+    te = Atr[y] - datos_tabla[y].rafagas;
+    Ate.push(te);
   }
-  
+
   totalAte = Ate.reduce((a, b) => a + b, 0);
-  tme = totalAte/(datos_tabla.length)
-  tmr = totalAtr/(datos_tabla.length)
-  
+  tme = totalAte / datos_tabla.length;
+  tmr = totalAtr / datos_tabla.length;
+
   for (let index = 0; index < Ate.length; index++) {
     graphArray.push({
-      "process":datos_tabla[index].proceso,
-      "cuenta":Atr[index],
-      "espera":Ate[index]
-    
-  })
+      process: datos_tabla[index].proceso,
+      cuenta: Atr[index],
+      espera: Ate[index],
+    });
   }
   for (let index = 0; index < Ate.length; index++) {
     tableArray.push({
-      "process":datos_tabla[index].proceso,
-      "cuenta":datos_tabla,
-      "espera":Ate[index]
-    
-  })
+      process: datos_tabla[index].proceso,
+      cuenta: datos_tabla,
+      espera: Ate[index],
+    });
   }
-  generaGrafica(graphArray)
-  datosOperaciones(graphArray,tme)
+  generaGrafica(graphArray);
+  datosOperaciones(graphArray, tme);
   proceso = [];
   rcpu = [];
   mix = [];
-  
 }
 /////////////////////////////////////////////FIN ROUND PP////////////////////////////////////////////////////////////////////////
 //////////////////////////Inicio FIFO////////////////////////////////////////
-function procesoFIFO(){
+function procesoFIFO() {
   let datos_tabla = [];
+  let aux = [];
   let Atr = [];
   let Ate = [];
-  let te=0;
-  let tr=0;
+  let te = 0;
+  let tr = 0;
   let totalAtr = 0;
   let totalAte = 0;
   let tme = 0;
   let tmr = 0;
-  let graphArray=[]
-  let tableArray=[]
+  let graphArray = [];
+  let tableArray = [];
   for (let c = 0; c < proceso.length; c++) {
     datos_tabla.push(
       (dicc = {
@@ -664,45 +671,51 @@ function procesoFIFO(){
       })
     );
   }
+  tllInicial = datos_tabla[0].tll;
+  tr = tllInicial;
+  datos_tabla.sort(function (a, b) {
+    if (a.tll > b.tll) return 1;
+    if (a.tll < b.tll) return -1;
 
-  datos_tabla.sort((a, b) => a.pr - b.pr);
-
-  datos_tabla.forEach(element => {
-    tr=tr+element.rafagas
-    Atr.push(tr)
+    if (a.rafagas > b.rafagas) return 1;
+    if (a.rafagas < b.rafagas) return -1;
   });
-    totalAtr = Atr.reduce((a, b) => a + b, 0);
-  for(let y=0; y<datos_tabla.length;y++){
-    te=(Atr[y]-datos_tabla[y].rafagas);
-    Ate.push(te)
+  console.log(datos_tabla);
+  datos_tabla.forEach((element) => {
+    tr = tr + element.rafagas;
+    Atr.push(tr);
+  });
+
+  totalAtr = Atr.reduce((a, b) => a + b, 0);
+  for (let y = 0; y < datos_tabla.length; y++) {
+    te = Atr[y] - datos_tabla[y].rafagas;
+    Ate.push(te);
   }
   totalAte = Ate.reduce((a, b) => a + b, 0);
-  tme = totalAte/(datos_tabla.length)
-  tmr = totalAtr/(datos_tabla.length)
-  
+  tme = totalAte / datos_tabla.length;
+  tmr = totalAtr / datos_tabla.length;
+
   for (let index = 0; index < Ate.length; index++) {
     graphArray.push({
-      "process":datos_tabla[index].proceso,
-      "cuenta":Atr[index],
-      "espera":Ate[index]
-    
-  })
+      process: datos_tabla[index].proceso,
+      cuenta: Atr[index],
+      espera: Ate[index],
+    });
   }
   for (let index = 0; index < Ate.length; index++) {
     tableArray.push({
-      "process":datos_tabla[index].proceso,
-      "cuenta":datos_tabla,
-      "espera":Ate[index]
-    
-  })
+      process: datos_tabla[index].proceso,
+      cuenta: datos_tabla,
+      espera: Ate[index],
+    });
   }
-  generaGrafica(graphArray)
-  datosOperaciones(graphArray,tme)
+  generaGrafica(graphArray);
+  datosOperaciones(graphArray, tme);
   proceso = [];
   rcpu = [];
   mix = [];
-  
 }
+
 //FIN FIFO////////////
 
 //Genera la tabla de procesos,necesita un arreglo de objetos con los identificadores process y cuenta, revisar linea 81 o la funcion proceosSRTF
@@ -758,7 +771,7 @@ function generaGrafica(elementos) {
   }
 }
 
-function datosOperaciones(tabla_grafica,tiempoEspera) {
+function datosOperaciones(tabla_grafica, tiempoEspera) {
   let tme = 0;
   let acumulador_tme = 0;
   let tmr = 0;
@@ -835,10 +848,8 @@ function datosOperaciones(tabla_grafica,tiempoEspera) {
     TE_datos.appendChild(te_te);
     TE.appendChild(TE_datos);
   }
-  if(tiempoEspera!=null)
-    tme=tiempoEspera
-  else
-    tme = parseFloat(acumulador_tme / proceso.length);
+  if (tiempoEspera != null) tme = tiempoEspera;
+  else tme = parseFloat(acumulador_tme / proceso.length);
   tmr = parseFloat(acumulador_tmr / proceso.length);
   operaciones_datos.appendChild(TE);
   operaciones.appendChild(operaciones_datos);
