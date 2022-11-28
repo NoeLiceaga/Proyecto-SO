@@ -491,34 +491,20 @@ function procesoRR() {
 ////////////////////////////////////////////INICIO SJF ///////////////////////////////////////////////////////////
 let indiceS = 0;
 let nombreMenor;
-<<<<<<< HEAD
-
-function procesoSJF() {
-=======
-let repetido=[];
+let repetido = [];
 let procesos = [];
 let rafagas = [];
-let tll=[];
+let tll = [];
 let nombreProcesoRepetido;
 let menorRafaga;
 let datos = [];
-let datos_grafica=[];
-function procesoSJF(){
->>>>>>> c58f36f2322219fe5d5ee5a3f98018e4b8e1f0af
+let datos_grafica = [];
+function procesoSJF() {
   let valorMenor = 0;
   let datos_tabla = [];
   let nombreProceso;
-<<<<<<< HEAD
-  let procesos = [];
-  let rafagas = [];
-  let tll = [];
-  let datos_grafica = [];
+
   let contador = 0;
-=======
-  
-  
-  let contador=0;
->>>>>>> c58f36f2322219fe5d5ee5a3f98018e4b8e1f0af
 
   for (let c = 0; c < proceso.length; c++) {
     datos_tabla.push(
@@ -530,126 +516,80 @@ function procesoSJF(){
     );
   }
 
-  
   valorMenor = mix[0];
   nombreProceso = proceso[0];
   contador++;
-<<<<<<< HEAD
   for (let i = 1; i < proceso.length; i++) {
     if (mix[i] < valorMenor) {
       valorMenor = mix[i];
       nombreProceso = proceso[i];
       indiceS = i;
-      contador++;
     }
   }
 
-  if (contador <= 2) {
-    //agregamos el proceso con el menor tiempo de llegada
-    procesos.splice(0, 0, proceso[indiceS]);
-    rafagas.splice(0, 0, rcpu[indiceS]);
-
-    //Borramos el proceso de menor tiempo de llegada
-    let tablaNueva = borraDatosTabla(datos_tabla, nombreProceso);
-    while (tablaNueva.length != 0) {
-      encontrarRcpuMenor(tablaNueva);
+  //agregamos el proceso con el menor tiempo de llegada
+  procesos.splice(0, 0, proceso[indiceS]);
+  rafagas.splice(0, 0, rcpu[indiceS]);
+  tll.splice(0, 0, datos_tabla[indiceS].tll);
+  datos.splice(0, 0, rafagas[indiceS]);
+  //Borramos el proceso de menor tiempo de llegada
+  let tablaNueva = borraDatosTabla(datos_tabla, nombreProceso);
+  let repetido;
+  while (tablaNueva.length != 0) {
+    encontrarRcpuMenor(tablaNueva);
+    repetido = verificarRepetido(tablaNueva, menorRafaga);
+    if (repetido == false) {
       procesos.splice(procesos.length, 0, tablaNueva[indiceS].proceso);
       rafagas.splice(rafagas.length, 0, tablaNueva[indiceS].rafagas);
       tll.splice(rafagas.length, 0, tablaNueva[indiceS].tll);
+      datos.splice(
+        datos.length,
+        0,
+        parseInt(datos[datos.length - 1] + tablaNueva[indiceS].rafagas)
+      );
       tablaNueva = borraDatosTabla(tablaNueva, nombreMenor);
+    } else {
+      insertarRepetidos(tablaNueva, menorRafaga);
+      tablaNueva = borraDatosTablaRafaga(tablaNueva, menorRafaga);
     }
-  } else {
   }
 
   for (let a = 0; a < proceso.length; a++) {
-    console.log(procesos[a]);
-    console.log(rafagas[a]);
-=======
-  for(let i=1; i<proceso.length; i++){
-    if(mix[i] < valorMenor){
-      valorMenor=mix[i];
-      nombreProceso=proceso[i];
-      indiceS= i;
-    }
-  }
-
-  
-    //agregamos el proceso con el menor tiempo de llegada
-    procesos.splice(0,0,proceso[indiceS]);
-    rafagas.splice(0,0,rcpu[indiceS]);
-    tll.splice(0,0,datos_tabla[indiceS].tll);
-    datos.splice(0,0,rafagas[indiceS]);
-    //Borramos el proceso de menor tiempo de llegada
-    let tablaNueva = borraDatosTabla(datos_tabla, nombreProceso);
-    let repetido;
-    while(tablaNueva.length!=0){
-      encontrarRcpuMenor(tablaNueva);
-      repetido=verificarRepetido(tablaNueva, menorRafaga);
-      if(repetido==false){
-        procesos.splice(procesos.length,0,tablaNueva[indiceS].proceso);
-        rafagas.splice(rafagas.length,0,tablaNueva[indiceS].rafagas);
-        tll.splice(rafagas.length, 0,tablaNueva[indiceS].tll );
-        datos.splice(datos.length, 0 , parseInt(datos[datos.length-1]+tablaNueva[indiceS].rafagas));
-        tablaNueva = borraDatosTabla(tablaNueva, nombreMenor);
-      }else{
-        insertarRepetidos(tablaNueva, menorRafaga);
-        tablaNueva = borraDatosTablaRafaga(tablaNueva, menorRafaga);
-      }
-      
-    }
-  
-  for(let a=0; a<proceso.length; a++){
     console.log(datos[a]);
->>>>>>> c58f36f2322219fe5d5ee5a3f98018e4b8e1f0af
   }
 
   for (let c = 0; c < proceso.length; c++) {
     datos_grafica.push(
       (dicc = {
         process: procesos[c],
-<<<<<<< HEAD
-        cuenta: parseInt(rafagas[c]),
-        espera: parseInt(tll[c]),
-=======
         cuenta: parseInt(datos[c]),
-        espera : parseInt(tll[c]),
->>>>>>> c58f36f2322219fe5d5ee5a3f98018e4b8e1f0af
+        espera: parseInt(tll[c]),
       })
     );
   }
 
-  let tme=0;
-  for(let a=0; a<datos.length; a++){
-    tme=tme+((datos[a]-rafagas[a]) - (datos_grafica[a].espera));
+  let tme = 0;
+  for (let a = 0; a < datos.length; a++) {
+    tme = tme + (datos[a] - rafagas[a] - datos_grafica[a].espera);
   }
-  tme = tme/proceso.length;
+  tme = tme / proceso.length;
   generaGrafica(datos_grafica);
   datosOperaciones(datos_grafica, tme);
 }
 
-<<<<<<< HEAD
-function verificarRepetido(datos_tabla, valor) {
-  let rProceso = [];
-  let rRafagas = [];
-  let rTll = [];
-  for (let i = 0; i < datos_tabla.length; i++) {
-    if (datos_tabla[i].tll) {
+function verificarRepetido(datos_tabla, menorRafaga) {
+  let rafaga = 0;
+  let contador = 0;
+  for (let j = 0; j < datos_tabla.length; j++) {
+    if (menorRafaga == datos_tabla[j].rafagas) {
+      contador++;
     }
-=======
-function verificarRepetido(datos_tabla, menorRafaga){
-  let rafaga=0;
-  let contador=0;
-    for(let j=0; j<datos_tabla.length; j++){
-      if(menorRafaga == datos_tabla[j].rafagas){
-        contador++;
-      }
-    }    
+  }
 
-  if(contador>1){
+  if (contador > 1) {
     return true;
-  }else{
+  } else {
     return false;
->>>>>>> c58f36f2322219fe5d5ee5a3f98018e4b8e1f0af
   }
 }
 
@@ -660,23 +600,17 @@ function borraDatosTabla(datos_tabla, nombreProceso) {
   return newDatos_tabla;
 }
 
-<<<<<<< HEAD
-function encontrarRcpuMenor(datos_tabla) {
-  let menorRafaga = datos_tabla[0].rafagas;
-
-  for (let s = 0; s < datos_tabla.length; s++) {
-    if (datos_tabla[s].rafagas <= menorRafaga) {
-=======
 function borraDatosTablaRafaga(datos_tabla, menorRafaga) {
-  let newDatos_tabla = datos_tabla.filter((item) => item.rafagas !== menorRafaga);
+  let newDatos_tabla = datos_tabla.filter(
+    (item) => item.rafagas !== menorRafaga
+  );
   return newDatos_tabla;
 }
 
-function encontrarRcpuMenor(datos_tabla){
-  menorRafaga=datos_tabla[0].rafagas;
-  for(let s=0; s<datos_tabla.length; s++){
-    if(datos_tabla[s].rafagas<=menorRafaga){
->>>>>>> c58f36f2322219fe5d5ee5a3f98018e4b8e1f0af
+function encontrarRcpuMenor(datos_tabla) {
+  menorRafaga = datos_tabla[0].rafagas;
+  for (let s = 0; s < datos_tabla.length; s++) {
+    if (datos_tabla[s].rafagas <= menorRafaga) {
       menorRafaga = datos_tabla[s].rafagas;
       nombreMenor = datos_tabla[s].proceso;
       indiceS = s;
@@ -684,29 +618,33 @@ function encontrarRcpuMenor(datos_tabla){
   }
 }
 
-function insertarRepetidos(tablaNueva, menorRafaga){
+function insertarRepetidos(tablaNueva, menorRafaga) {
   let nueva = tablaNueva.filter((item) => item.rafagas == menorRafaga);
-  let indiceMenor=0;
+  let indiceMenor = 0;
   let limite = nueva.length;
-  for(let i=0; i<limite; i++){
-    indiceMenor=encontrarTllMenor(nueva);
-    procesos.splice(procesos.length,0,nueva[indiceMenor].proceso);
-    rafagas.splice(rafagas.length,0,nueva[indiceMenor].rafagas);
-    tll.splice(rafagas.length, 0,nueva[indiceMenor].tll);
-    datos.splice(datos.length, 0 , parseInt(datos[datos.length-1]+tablaNueva[indiceS].rafagas));
-    nueva=borraDatosTabla(nueva,nombreProcesoRepetido);
+  for (let i = 0; i < limite; i++) {
+    indiceMenor = encontrarTllMenor(nueva);
+    procesos.splice(procesos.length, 0, nueva[indiceMenor].proceso);
+    rafagas.splice(rafagas.length, 0, nueva[indiceMenor].rafagas);
+    tll.splice(rafagas.length, 0, nueva[indiceMenor].tll);
+    datos.splice(
+      datos.length,
+      0,
+      parseInt(datos[datos.length - 1] + tablaNueva[indiceS].rafagas)
+    );
+    nueva = borraDatosTabla(nueva, nombreProcesoRepetido);
   }
 }
 
-function encontrarTllMenor(nueva_tabla){
-  let menor=nueva_tabla[0].tll;
-  nombreProcesoRepetido= nueva_tabla[0].proceso;
-  let indice=0;
-  for(let j=0; j<nueva_tabla.length; j++){
-    if(nueva_tabla[j].tll < menor){
-      menor= nueva_tabla[j].tll;
-      indice=j;
-      nombreProcesoRepetido= nueva_tabla[j].proceso;
+function encontrarTllMenor(nueva_tabla) {
+  let menor = nueva_tabla[0].tll;
+  nombreProcesoRepetido = nueva_tabla[0].proceso;
+  let indice = 0;
+  for (let j = 0; j < nueva_tabla.length; j++) {
+    if (nueva_tabla[j].tll < menor) {
+      menor = nueva_tabla[j].tll;
+      indice = j;
+      nombreProcesoRepetido = nueva_tabla[j].proceso;
     }
   }
   return indice;
