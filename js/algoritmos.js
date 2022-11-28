@@ -574,7 +574,6 @@ function procesoSJF() {
   }
   tme = tme / proceso.length;
   generaGrafica(datos_grafica);
-  datosOperaciones(datos_grafica, tme);
 }
 
 function verificarRepetido(datos_tabla, menorRafaga) {
