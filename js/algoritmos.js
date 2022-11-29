@@ -209,6 +209,7 @@ function proceosSRTF() {
   let tllRepetidos = 0;
   let sinTllRepetidos = [];
   let datos_tabla = [];
+  let tmesrtf = 0;
   //Creo un diccionario con todos los valores obtenidos, el dic tiene nombre,rcpu y tll del proceso
   for (let c = 0; c < proceso.length; c++) {
     datos_tabla.push(
@@ -266,6 +267,7 @@ function proceosSRTF() {
   datos_tabla.splice(0, datos_tabla.length);
   datos_tabla = newData;
   let indices = 0;
+  let nombreP;
   //Una vez que todos los procesos a excepcion del ulitmo, entra el que tiene menos rafagas
   while (datos_tabla.length != 0) {
     let tllMenor = 0;
@@ -281,6 +283,7 @@ function proceosSRTF() {
       acumulador = acumulador + datos_tabla[tllMenor].rafagas;
       datos_tabla[tllMenor].rafagas =
         datos_tabla[tllMenor].rafagas - datos_tabla[tllMenor].rafagas;
+      nombreP = datos_tabla[tllMenor].proceso;
       datos_grafica.push(
         (dicc = {
           process: datos_tabla[tllMenor].proceso,
@@ -292,6 +295,7 @@ function proceosSRTF() {
       acumulador = acumulador + datos_tabla[indices[0]].rafagas;
       datos_tabla[indices[0]].rafagas =
         datos_tabla[indices[0]].rafagas - datos_tabla[indices[0]].rafagas;
+      nombreP = datos_tabla[indices[0]].proceso;
       datos_grafica.push(
         (dicc = {
           process: datos_tabla[indices[0]].proceso,
@@ -300,17 +304,20 @@ function proceosSRTF() {
         })
       );
     }
-    let newData = borraDatosTabla(datos_tabla);
+    let newData = borraDatosTabla(datos_tabla, nombreP);
     datos_tabla.splice(0, datos_tabla.length);
     datos_tabla = newData;
     console.log(datos_tabla);
   }
-
+  for (let i = 0; i < datos_grafica.length; i++) {
+    console.log(i + ": " + tmesrtf);
+    tmesrtf = tmesrtf + datos_grafica[i].espera;
+  }
   console.log(datos_grafica);
   console.log(datos_tabla);
   console.log("Indices:" + indices);
   generaGrafica(datos_grafica);
-  datosOperaciones(datos_grafica);
+  datosOperaciones(datos_grafica, tmesrtf);
 
   proceso = [];
   rcpu = [];
@@ -485,6 +492,12 @@ function procesoRR() {
 
   generaGrafica(datos_grafica);
   datosOperaciones(datos_grafica, tmeRR);
+  proceso = [];
+  rcpu = [];
+  mix = [];
+  repetidos = 0;
+  arrayTllRepetidos = [];
+  tllInicial = 0;
 }
 
 /////////////////////////////////////////////FIN ROUND ROBIN////////////////////////////////////////////////////////////////////////
@@ -574,6 +587,22 @@ function procesoSJF() {
   }
   tme = tme / proceso.length;
   generaGrafica(datos_grafica);
+  proceso = [];
+  rcpu = [];
+  mix = [];
+  repetidos = 0;
+  arrayTllRepetidos = [];
+  tllInicial = 0;
+  indiceS = 0;
+  nombreMenor;
+  repetido = [];
+  procesos = [];
+  rafagas = [];
+  tll = [];
+  nombreProcesoRepetido;
+  menorRafaga;
+  datos = [];
+  datos_grafica = [];
 }
 
 function verificarRepetido(datos_tabla, menorRafaga) {
@@ -709,6 +738,9 @@ function procesoPP() {
   proceso = [];
   rcpu = [];
   mix = [];
+  repetidos = 0;
+  arrayTllRepetidos = [];
+  tllInicial = 0;
 }
 /////////////////////////////////////////////FIN ROUND PP////////////////////////////////////////////////////////////////////////
 //////////////////////////Inicio FIFO////////////////////////////////////////
@@ -734,8 +766,6 @@ function procesoFIFO() {
       })
     );
   }
-  tllInicial = datos_tabla[0].tll;
-  tr = tllInicial;
   datos_tabla.sort(function (a, b) {
     if (a.tll > b.tll) return 1;
     if (a.tll < b.tll) return -1;
@@ -744,6 +774,8 @@ function procesoFIFO() {
     if (a.rafagas < b.rafagas) return -1;
   });
   console.log(datos_tabla);
+  tllInicial = datos_tabla[0].tll;
+  tr = tllInicial;
   datos_tabla.forEach((element) => {
     tr = tr + element.rafagas;
     Atr.push(tr);
@@ -777,6 +809,9 @@ function procesoFIFO() {
   proceso = [];
   rcpu = [];
   mix = [];
+  repetidos = 0;
+  arrayTllRepetidos = [];
+  tllInicial = 0;
 }
 
 //FIN FIFO////////////
@@ -787,12 +822,14 @@ function generaGrafica(elementos) {
     let contenedor_contenido = document.getElementById("contenedor_contenido");
     let espacio_grafica = document.createElement("div");
     espacio_grafica.classList.add("espacio_grafica");
+    espacio_grafica.id = "espacio_grafica";
 
     let contenedor_grafica = document.createElement("div");
     contenedor_grafica.classList.add("contenedor_grafica");
     contenedor_grafica.id = "contenedor_grafica";
     let numeros = document.createElement("div");
     numeros.classList.add("numeros");
+    numeros.id = "numeros";
 
     for (let i = 0; i < elementos.length; i++) {
       let contenedor_elemento = document.createElement("div");
@@ -839,10 +876,26 @@ function datosOperaciones(tabla_grafica, tiempoEspera) {
   let acumulador_tme = 0;
   let tmr = 0;
   let acumulador_tmr = 0;
+  console.log(tabla_grafica);
+  console.log(tiempoEspera);
   let operaciones = document.getElementById("operaciones");
 
   let operaciones_datos = document.createElement("div");
   operaciones_datos.classList.add("operaciones_datos");
+  operaciones_datos.id = "operaciones_datos";
+
+  let operaciones_boton = document.createElement("div");
+  operaciones_boton.classList.add("operaciones_boton");
+  operaciones_boton.id = "operaciones_boton";
+  let limpiar = document.createElement("div");
+  limpiar.classList.add("limpiar");
+  let a = document.createElement("a");
+  a.classList.add("ov-btn-grow-skew");
+  a.innerHTML = "LIMPIA TODO";
+  a.href = "#";
+  a.onclick = eliminaTodo;
+  limpiar.appendChild(a);
+  operaciones_boton.appendChild(limpiar);
 
   let TR = document.createElement("div");
   TR.classList.add("TR");
@@ -871,6 +924,7 @@ function datosOperaciones(tabla_grafica, tiempoEspera) {
 
     let tr = tabla_grafica.filter((item) => item.process == proceso[i]);
     acumulador_tmr = acumulador_tmr + parseFloat(tr[tr.length - 1].cuenta);
+    console.log("TR " + i + ": " + acumulador_tmr);
     tr_tr.innerHTML = tr[tr.length - 1].cuenta;
     TR_datos.appendChild(tr_proceso);
     TR_datos.appendChild(tr_tr);
@@ -911,11 +965,13 @@ function datosOperaciones(tabla_grafica, tiempoEspera) {
     TE_datos.appendChild(te_te);
     TE.appendChild(TE_datos);
   }
-  if (tiempoEspera != null) tme = tiempoEspera;
-  else tme = parseFloat(acumulador_tme / proceso.length);
+  //if (tiempoEspera != null) tme = tiempoEspera;
+  //else
+  tme = parseFloat(acumulador_tme / proceso.length);
   tmr = parseFloat(acumulador_tmr / proceso.length);
   operaciones_datos.appendChild(TE);
   operaciones.appendChild(operaciones_datos);
+  operaciones.appendChild(operaciones_boton);
 
   let TM = document.createElement("div");
   TM.classList.add("Tiempos_medios");
@@ -949,4 +1005,21 @@ function datosOperaciones(tabla_grafica, tiempoEspera) {
   TM.appendChild(TMR);
 
   operaciones_datos.appendChild(TM);
+  acumulador_tme = 0;
+  acumulador_tmr = 0;
+}
+
+function eliminaTodo() {
+  if (document.getElementById("espacio_grafica") != null) {
+    let padre = document.getElementById("contenedor_grafica");
+    let espacio_grafica = document.getElementById("espacio_grafica");
+    let numeros = document.getElementById("numeros");
+    padre.removeChild(espacio_grafica);
+    padre.removeChild(numeros);
+    let operaciones = document.getElementById("operaciones");
+    let operaciones_hijo = document.getElementById("operaciones_datos");
+    let operaciones_hijo_2 = document.getElementById("operaciones_boton");
+    operaciones.removeChild(operaciones_hijo);
+    operaciones.removeChild(operaciones_hijo_2);
+  }
 }
