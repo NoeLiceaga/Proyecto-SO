@@ -315,7 +315,7 @@
   z-index: 1;
   overflow: hidden;
   display: flex;
-  width: 100%;
+  width: 90%;
 }
 .ov-btn-grow-skew:hover {
   color: #fff; /* color de fuente hover */
