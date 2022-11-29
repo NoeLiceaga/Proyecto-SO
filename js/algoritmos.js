@@ -557,13 +557,18 @@ function procesoSJF() {
   for (let a = 0; a < proceso.length; a++) {
     console.log(datos[a]);
   }
-
+  let esperaM = [];
+  esperaM.splice(0,0,0);
+  for (let a = 0; a < datos.length; a++) {
+    esperaM.splice(esperaM.length, 0, ((datos[a] - rafagas[a]) - (tll[a])));
+  }
+  
   for (let c = 0; c < proceso.length; c++) {
     datos_grafica.push(
       (dicc = {
         process: procesos[c],
         cuenta: parseInt(datos[c]),
-        espera: parseInt(tll[c]),
+        espera: parseInt(esperaM[c]),
       })
     );
   }
@@ -574,6 +579,7 @@ function procesoSJF() {
   }
   tme = tme / proceso.length;
   generaGrafica(datos_grafica);
+  datosOperaciones(datos_grafica, tme);
 }
 
 function verificarRepetido(datos_tabla, menorRafaga) {
