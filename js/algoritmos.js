@@ -317,6 +317,7 @@ function proceosSRTF() {
   console.log(datos_tabla);
   console.log("Indices:" + indices);
   generaGrafica(datos_grafica);
+  console.log("GOLS");
   datosOperaciones(datos_grafica, tmesrtf);
 
   proceso = [];
@@ -825,6 +826,7 @@ function procesoFIFO() {
 //Genera la tabla de procesos,necesita un arreglo de objetos con los identificadores process y cuenta, revisar linea 81 o la funcion proceosSRTF
 function generaGrafica(elementos) {
   if (document.getElementById("contenedor_grafica") == null) {
+    console.log("Pipri: " + document.getElementById("contenedor_grafica"));
     let contenedor_contenido = document.getElementById("contenedor_contenido");
     let espacio_grafica = document.createElement("div");
     espacio_grafica.classList.add("espacio_grafica");
@@ -1018,6 +1020,9 @@ function datosOperaciones(tabla_grafica, tiempoEspera) {
 function eliminaTodo() {
   if (document.getElementById("espacio_grafica") != null) {
     let padre = document.getElementById("contenedor_grafica");
+    padre.childNodes.forEach((x) => {
+      padre.removeChild(x);
+    });
     let espacio_grafica = document.getElementById("espacio_grafica");
     let numeros = document.getElementById("numeros");
     padre.removeChild(espacio_grafica);
