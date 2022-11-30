@@ -5,7 +5,7 @@ let repetidos = 0; ////Cuantos tiempos de llegada se repiten, ejem. 2 y 4
 let arrayTllRepetidos = []; //Arreglo con la cantidad de cada tiempo de llamada reptidos ejem. 3 en tiempo 2 y 2 en tiempo 4
 let tllInicial = 0; //Sirve para saber en que tll entró el primer proceso
 let quant = 0; // Variable global del quantum en RR
-let colores = ["#FAF1D6" , "#FAD4DE" , "#FDAFAB" , "#D9F1F1", "#B6E3E9", "#FF9A2", "#FFB7B2", "#FFDAC1", "#E2F0CB", "#B5EAD7", "#C7CEEA"];
+let colores = ["rgb(63, 59, 108)" , "rgb(98, 79, 130)" , "rgb(108, 74, 182)" , "#14DB69", "#30FCD7", "#20BFE6", "#2485FF", "#FFA724", "#A8E620", "#2036E6", "#30FCD7", "#64DB14"];
 function obtenDatos() {
   let padre = document.getElementById("contenido_tabla");
   let divConDatos = padre.childNodes;
@@ -825,10 +825,12 @@ function generaGrafica(elementos) {
     numeros.id = "numeros";
 
     let numAleat;
+    let div;
     for (let i = 0; i < elementos.length; i++) {
-
+      
       //Generacion de numero aleatorio para el color del div
-      numAleat = Math.floor(Math.random() * 12);
+      
+      console.log(numAleat);
       let contenedor_elemento = document.createElement("div");
       contenedor_elemento.classList.add("contenedor_elemento");
 
@@ -837,11 +839,14 @@ function generaGrafica(elementos) {
       label.innerText = elementos[i].process;
       let barra = document.createElement("div");
       barra.classList.add("barra");
-      
       contenedor_elemento.appendChild(label);
       contenedor_elemento.appendChild(barra);
       espacio_grafica.appendChild(contenedor_elemento);
-      document.getElementById('barra').style.backgroundColor='#CCCCCC';
+      div=document.getElementsByClassName("barra");
+      
+      
+      
+      
       let numero_x_par = document.createElement("div");
       numero_x_par.classList.add("numeros_por_par");
       if (i == 0) {
@@ -860,11 +865,19 @@ function generaGrafica(elementos) {
         numero_x_par.appendChild(nff);
       }
       numeros.appendChild(numero_x_par);
+      console.log(div);
+      
+      
     }
-
+    
     contenedor_grafica.appendChild(espacio_grafica);
     contenedor_grafica.appendChild(numeros);
     contenedor_contenido.appendChild(contenedor_grafica);
+    for(let j=0; j<div.length; j++){
+      numAleat = Math.floor(Math.random() * 12);
+      console.log(numAleat);
+      div[j].style.backgroundColor = colores[numAleat];
+    }
   }
 }
 
