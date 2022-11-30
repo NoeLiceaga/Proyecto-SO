@@ -676,6 +676,7 @@ function procesoPP() {
   let tmr = 0;
   let graphArray = [];
   let tableArray = [];
+  //Creo un diccionario con todos los valores obtenidos, el dic tiene nombre,rcpu y PP
   for (let c = 0; c < proceso.length; c++) {
     datos_tabla.push(
       (dicc = {
@@ -685,24 +686,29 @@ function procesoPP() {
       })
     );
   }
-
+  //Ordeno el diccionario segun PP
   datos_tabla.sort((a, b) => a.pr - b.pr);
 
+  //Con forEach creo un ciclo hasta recorrer todos los elementos de las refagas para asignarlos a una matriz
   datos_tabla.forEach((element) => {
     tr = tr + element.rafagas;
     Atr.push(tr);
   });
-
+  //Sumo la matriz con todos los elementos de tr para generar un total
   totalAtr = Atr.reduce((a, b) => a + b, 0);
+
+  //Con for creo un ciclo para generar mi tiempo de espera(te) que es una resta de tr menos las rafagas y a su vez creo una matriz para mis te
   for (let y = 0; y < datos_tabla.length; y++) {
     te = Atr[y] - datos_tabla[y].rafagas;
     Ate.push(te);
   }
-
+  //Sumo la matriz con todos los elementos de te para generar un total
   totalAte = Ate.reduce((a, b) => a + b, 0);
+  //Calculo los valores tiempo medio de espera y tiempo medio de retorno
   tme = totalAte / datos_tabla.length;
   tmr = totalAtr / datos_tabla.length;
 
+  //asigno los valores a la tabla
   for (let index = 0; index < Ate.length; index++) {
     graphArray.push({
       process: datos_tabla[index].proceso,
@@ -710,6 +716,7 @@ function procesoPP() {
       espera: Ate[index],
     });
   }
+  //Asigno los valores a la tabla 
   for (let index = 0; index < Ate.length; index++) {
     tableArray.push({
       process: datos_tabla[index].proceso,
@@ -717,8 +724,9 @@ function procesoPP() {
       espera: Ate[index],
     });
   }
+  //Genero la grafica con mis datos
   generaGrafica(graphArray);
-  datosOperaciones(graphArray, tme);
+  datosOperaciones2(graphArray, tme);
   proceso = [];
   rcpu = [];
   mix = [];
