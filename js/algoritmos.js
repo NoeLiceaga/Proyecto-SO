@@ -5,7 +5,7 @@ let repetidos = 0; ////Cuantos tiempos de llegada se repiten, ejem. 2 y 4
 let arrayTllRepetidos = []; //Arreglo con la cantidad de cada tiempo de llamada reptidos ejem. 3 en tiempo 2 y 2 en tiempo 4
 let tllInicial = 0; //Sirve para saber en que tll entró el primer proceso
 let quant = 0; // Variable global del quantum en RR
-
+let colores = ["#FAF1D6" , "#FAD4DE" , "#FDAFAB" , "#D9F1F1", "#B6E3E9", "#FF9A2", "#FFB7B2", "#FFDAC1", "#E2F0CB", "#B5EAD7", "#C7CEEA"];
 function obtenDatos() {
   let padre = document.getElementById("contenido_tabla");
   let divConDatos = padre.childNodes;
@@ -492,7 +492,7 @@ function procesoRR() {
   }
 
   generaGrafica(datos_grafica);
-  datosOperaciones(datos_grafica, tmeRR);
+  datosOperaciones2(datos_grafica, tmeRR);
   proceso = [];
   rcpu = [];
   mix = [];
@@ -816,7 +816,11 @@ function generaGrafica(elementos) {
     numeros.classList.add("numeros");
     numeros.id = "numeros";
 
+    let numAleat;
     for (let i = 0; i < elementos.length; i++) {
+
+      //Generacion de numero aleatorio para el color del div
+      numAleat = Math.floor(Math.random() * 12);
       let contenedor_elemento = document.createElement("div");
       contenedor_elemento.classList.add("contenedor_elemento");
 
@@ -825,11 +829,11 @@ function generaGrafica(elementos) {
       label.innerText = elementos[i].process;
       let barra = document.createElement("div");
       barra.classList.add("barra");
-
+      
       contenedor_elemento.appendChild(label);
       contenedor_elemento.appendChild(barra);
       espacio_grafica.appendChild(contenedor_elemento);
-
+      document.getElementById('barra').style.backgroundColor='#CCCCCC';
       let numero_x_par = document.createElement("div");
       numero_x_par.classList.add("numeros_por_par");
       if (i == 0) {
