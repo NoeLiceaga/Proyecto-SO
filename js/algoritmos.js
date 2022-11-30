@@ -513,6 +513,7 @@ let nombreProcesoRepetido;
 let menorRafaga;
 let datos = [];
 let datos_grafica = [];
+
 function procesoSJF() {
   let valorMenor = 0;
   let datos_tabla = [];
@@ -545,7 +546,7 @@ function procesoSJF() {
   procesos.splice(0, 0, proceso[indiceS]);
   rafagas.splice(0, 0, rcpu[indiceS]);
   tll.splice(0, 0, datos_tabla[indiceS].tll);
-  datos.splice(0, 0, rafagas[indiceS]);
+  datos.splice(0, 0, rcpu[indiceS]);
   //Borramos el proceso de menor tiempo de llegada
   let tablaNueva = borraDatosTabla(datos_tabla, nombreProceso);
   let repetido;
@@ -556,11 +557,7 @@ function procesoSJF() {
       procesos.splice(procesos.length, 0, tablaNueva[indiceS].proceso);
       rafagas.splice(rafagas.length, 0, tablaNueva[indiceS].rafagas);
       tll.splice(rafagas.length, 0, tablaNueva[indiceS].tll);
-      datos.splice(
-        datos.length,
-        0,
-        parseInt(datos[datos.length - 1] + tablaNueva[indiceS].rafagas)
-      );
+      datos.splice(datos.length,0,parseInt(datos[datos.length - 1] + tablaNueva[indiceS].rafagas));
       tablaNueva = borraDatosTabla(tablaNueva, nombreMenor);
     } else {
       insertarRepetidos(tablaNueva, menorRafaga);
@@ -568,13 +565,12 @@ function procesoSJF() {
     }
   }
 
-  for (let a = 0; a < proceso.length; a++) {
-    console.log(datos[a]);
-  }
+  
+
   let esperaM = [];
-  esperaM.splice(0, 0, 0);
+  //esperaM.splice(0, 0, 0);
   for (let a = 0; a < datos.length; a++) {
-    esperaM.splice(esperaM.length, 0, datos[a] - rafagas[a] - tll[a]);
+    esperaM.splice(esperaM.length, 0, (datos[a] - rafagas[a]) - tll[a]);
   }
 
   for (let c = 0; c < proceso.length; c++) {
@@ -589,27 +585,11 @@ function procesoSJF() {
 
   let tme = 0;
   for (let a = 0; a < datos.length; a++) {
-    tme = tme + (datos[a] - rafagas[a] - datos_grafica[a].espera);
+    tme = tme + esperaM[a];
   }
   tme = tme / proceso.length;
   generaGrafica(datos_grafica);
-  proceso = [];
-  rcpu = [];
-  mix = [];
-  repetidos = 0;
-  arrayTllRepetidos = [];
-  tllInicial = 0;
-  indiceS = 0;
-  nombreMenor;
-  repetido = [];
-  procesos = [];
-  rafagas = [];
-  tll = [];
-  nombreProcesoRepetido;
-  menorRafaga;
-  datos = [];
-  datos_grafica = [];
-  datosOperaciones(datos_grafica, tme);
+  datosOperaciones2(datos_grafica, tme);
 }
 
 function verificarRepetido(datos_tabla, menorRafaga) {
@@ -662,10 +642,7 @@ function insertarRepetidos(tablaNueva, menorRafaga) {
     procesos.splice(procesos.length, 0, nueva[indiceMenor].proceso);
     rafagas.splice(rafagas.length, 0, nueva[indiceMenor].rafagas);
     tll.splice(rafagas.length, 0, nueva[indiceMenor].tll);
-    datos.splice(
-      datos.length,
-      0,
-      parseInt(datos[datos.length - 1] + tablaNueva[indiceS].rafagas)
+    datos.splice(datos.length,0,parseInt(datos[datos.length - 1] + tablaNueva[indiceS].rafagas)
     );
     nueva = borraDatosTabla(nueva, nombreProcesoRepetido);
   }
@@ -976,6 +953,145 @@ function datosOperaciones(tabla_grafica, tiempoEspera) {
   //if (tiempoEspera != null) tme = tiempoEspera;
   //else
   tme = parseFloat(acumulador_tme / proceso.length);
+  tmr = parseFloat(acumulador_tmr / proceso.length);
+  operaciones_datos.appendChild(TE);
+  operaciones.appendChild(operaciones_datos);
+  operaciones.appendChild(operaciones_boton);
+
+  let TM = document.createElement("div");
+  TM.classList.add("Tiempos_medios");
+
+  let TME = document.createElement("div");
+  TME.classList.add("TME");
+  let TME_t = document.createElement("div");
+  TME_t.classList.add("TME_titulo");
+  TME_t.innerHTML = "Tiempo Medio de Espera";
+  TME.appendChild(TME_t);
+
+  let TME_d = document.createElement("div");
+  TME_d.classList.add("TME_dato");
+  TME_d.innerHTML = parseFloat(tme).toFixed(2) + " ut";
+
+  TME.appendChild(TME_d);
+  TM.appendChild(TME);
+
+  let TMR = document.createElement("div");
+  TMR.classList.add("TMR");
+  let TMR_t = document.createElement("div");
+  TMR_t.classList.add("TMR_titulo");
+  TMR_t.innerHTML = "Tiempo Medio de Retorno";
+  TMR.appendChild(TMR_t);
+
+  let TMR_d = document.createElement("div");
+  TMR_d.classList.add("TMR_dato");
+  TMR_d.innerHTML = parseFloat(tmr).toFixed(2) + " ut";
+
+  TMR.appendChild(TMR_d);
+  TM.appendChild(TMR);
+
+  operaciones_datos.appendChild(TM);
+  acumulador_tme = 0;
+  acumulador_tmr = 0;
+}
+
+
+function datosOperaciones2(tabla_grafica, tiempoEspera) {
+  let tme = 0;
+  let acumulador_tme = 0;
+  let tmr = 0;
+  let acumulador_tmr = 0;
+  console.log(tabla_grafica);
+  console.log(tiempoEspera);
+  let operaciones = document.getElementById("operaciones");
+
+  let operaciones_datos = document.createElement("div");
+  operaciones_datos.classList.add("operaciones_datos");
+  operaciones_datos.id = "operaciones_datos";
+
+  let operaciones_boton = document.createElement("div");
+  operaciones_boton.classList.add("operaciones_boton");
+  operaciones_boton.id = "operaciones_boton";
+  let limpiar = document.createElement("div");
+  limpiar.classList.add("limpiar");
+  let a = document.createElement("a");
+  a.classList.add("ov-btn-grow-skew");
+  a.innerHTML = "LIMPIA TODO";
+  a.href = "#";
+  a.onclick = eliminaTodo;
+  limpiar.appendChild(a);
+  operaciones_boton.appendChild(limpiar);
+
+  let TR = document.createElement("div");
+  TR.classList.add("TR");
+
+  let TR_titulos = document.createElement("div");
+  TR_titulos.classList.add("TR_titulos");
+  let tr_proceso = document.createElement("div");
+  tr_proceso.classList.add("tr_proceso");
+  tr_proceso.innerHTML = "Proceso";
+  let tr_tr = document.createElement("div");
+  tr_tr.classList.add("tr_tr");
+  tr_tr.innerHTML = "TiempoRetorno";
+
+  TR_titulos.appendChild(tr_proceso);
+  TR_titulos.appendChild(tr_tr);
+  TR.appendChild(TR_titulos);
+
+  for (let i = 0; i < proceso.length; i++) {
+    let TR_datos = document.createElement("div");
+    TR_datos.classList.add("TR_datos");
+    tr_proceso = document.createElement("div");
+    tr_proceso.classList.add("tr_proceso");
+    tr_proceso.innerHTML = proceso[i];
+    tr_tr = document.createElement("div");
+    tr_tr.classList.add("tr_tr");
+
+    let tr = tabla_grafica.filter((item) => item.process == proceso[i]);
+    acumulador_tmr = acumulador_tmr + parseFloat(tr[tr.length - 1].cuenta);
+    console.log("TR " + i + ": " + acumulador_tmr);
+    tr_tr.innerHTML = tr[tr.length - 1].cuenta;
+    TR_datos.appendChild(tr_proceso);
+    TR_datos.appendChild(tr_tr);
+    TR.appendChild(TR_datos);
+  }
+  operaciones_datos.appendChild(TR);
+  operaciones.appendChild(operaciones_datos);
+
+  let TE = document.createElement("div");
+  TE.classList.add("TE");
+  let TE_titulos = document.createElement("div");
+  TE_titulos.classList.add("TE_titulos");
+  let te_proceso = document.createElement("div");
+  te_proceso.classList.add("te_proceso");
+  te_proceso.innerHTML = "Proceso";
+  let te_te = document.createElement("div");
+  te_te.classList.add("te_te");
+  te_te.innerHTML = "TiempoEspera";
+
+  TE_titulos.appendChild(te_proceso);
+  TE_titulos.appendChild(te_te);
+  TE.appendChild(TE_titulos);
+  for (let i = 0; i < proceso.length; i++) {
+    let TE_datos = document.createElement("div");
+    TE_datos.classList.add("TE_datos");
+    te_proceso = document.createElement("div");
+    te_proceso.classList.add("te_proceso");
+    te_te = document.createElement("div");
+    te_te.classList.add("te_te");
+
+    let te = tabla_grafica.filter((item) => item.process == proceso[i]);
+    //acumulador_tme = acumulador_tme + parseFloat(te[0].espera - mix[i]);
+
+    te_proceso.innerHTML = te[0].process;
+    te_te.innerHTML = te[0].espera;
+
+    TE_datos.appendChild(te_proceso);
+    TE_datos.appendChild(te_te);
+    TE.appendChild(TE_datos);
+  }
+  //if (tiempoEspera != null) tme = tiempoEspera;
+  //else
+  tme = parseFloat(tiempoEspera);
   tmr = parseFloat(acumulador_tmr / proceso.length);
   operaciones_datos.appendChild(TE);
   operaciones.appendChild(operaciones_datos);
